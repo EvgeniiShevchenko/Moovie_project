@@ -1,5 +1,5 @@
 const express = require( 'express' );
-const proxyMiddleware = require('http-proxy-middleware')
+const proxyMiddleware = require('http-proxy-middleware');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const next = require( 'next' );
@@ -29,33 +29,33 @@ const devProxy = {
 //DB connect
 mongoose.connect(db.MongoURI, {useNewUrlParser: true})
     .then(() => console.log("You are connected to Mongodb database !"))
-    .catch(err => console.log(err))
+    .catch(err => console.log(err));
 
 
 app.prepare()
 	.then( () => {
     const server = express();
-    
+
     // server.use(bodyParser.json());
     // server.use(bodyParser.urlencoded({extended: true}));
-    
+
     // log only 4xx and 5xx responses to console
     server.use(morgan('dev'));
-    
+
     // log all requests to access.log
     server.use(morgan('common', {
         stream: fs.createWriteStream(path.join(__dirname, 'access.log'), { flags: 'a' })
-    }))
+    }));
 
     if (dev && devProxy) {
-        const proxyMiddleware = require('http-proxy-middleware')
+        const proxyMiddleware = require('http-proxy-middleware');
         Object.keys(devProxy).forEach(function (context) {
           server.use(proxyMiddleware(context, devProxy[context]))
         })
     }
 
     // server.use(handler);
-    
+
     server.get('*', (req, res) => {
       return handle(req, res)
     });

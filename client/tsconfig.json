@@ -29,6 +29,12 @@
   "include": [
     "next-env.d.ts",
     "**/*.ts",
-    "**/*.tsx", "components/IndexContext.js", "config/key.js", "pages/_error.js", "models/Moovi.js", "routes/api/item.js", "components/Layout.jsx"
+    "**/*.tsx",
+    "components/IndexContext.js",
+    "config/key.js",
+    "pages/_error.js",
+    "models/Moovi.js",
+    "routes/api/item.js",
+    "components/Layout.jsx"
   ]
 }

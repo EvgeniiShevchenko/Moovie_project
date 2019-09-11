@@ -1,13 +1,13 @@
 const withPlugins = require('next-compose-plugins');
 const withBundleAnalyzer = require("@zeit/next-bundle-analyzer");
 const withSass = require("@zeit/next-sass");
-const withCSS = require('@zeit/next-css')
-const withTypescript = require('@zeit/next-typescript')
-const FilterWarningsPlugin = require('webpack-filter-warnings-plugin')
+const withCSS = require('@zeit/next-css');
+const withTypescript = require('@zeit/next-typescript');
+const FilterWarningsPlugin = require('webpack-filter-warnings-plugin');
 
 
 module.exports = withPlugins([
-  [withCSS, 
+  [withCSS,
   //     {
   //     webpack (config) {
   //       config.module.rules.push(
@@ -55,7 +55,7 @@ module.exports = withPlugins([
                 }
             }
         });
-  
+
         return config;
     }
   }],

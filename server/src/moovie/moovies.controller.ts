@@ -2,8 +2,7 @@ import { Controller, Get, Post, Body, Param, Req, Res, Request } from '@nestjs/c
 import { CreateMoovieDto } from './dto/create-moovie.dto';
 import { MooviesService } from './moovies.service';
 import { Moovie } from './interfaces/moovie.interface';
-import {CreateFilterDTO} from "./dto/mydto.dto";
-
+import { CreateFilterDTO } from './dto/mydto.dto';
 
 @Controller('api/moovie')
 export class MoovieController {
@@ -20,12 +19,12 @@ export class MoovieController {
     console.log(params.id);
     return this.mooviesService.findOne(params.id);
   }
-  
+
   @Post()
   async create(@Body() CreateMoovieDto: CreateMoovieDto) {
     this.mooviesService.create(CreateMoovieDto);
   }
-  
+
   // @Post()
   // async PaginationRequiset(@Req() req, @Res() res) {
   //   console.log("HaHA!", req.body);
@@ -33,9 +32,9 @@ export class MoovieController {
   //   // return this.mooviesService.filterSearch(body.curentpage, body.skip, body.limit, body.filter, body.search);
   // }
   // @Header('content-type', 'text/html')
-  @Post("search/:action")
+  @Post('search/:action')
   async PaginationRequiset(@Body() body: CreateFilterDTO): Promise<Moovie[]> {
-    console.log("HaHa", body);
+    console.log('HaHa', body);
     return this.mooviesService.filterSearch(body.curentpage, body.skip, body.limit, body.filter, body.search, body.itemName);
   }
 
