@@ -1,14 +1,12 @@
-import React from "react";
+import React from 'react';
 import Link from 'next/link';
 import Router from 'next/router';
 import { usePagination } from 'react-pagination-hook';
-import styled from "styled-components";
+import styled from 'styled-components';
 // import fetch from "unfetch";
 import Grid from '@material-ui/core/Grid';
-import SearchContext from "../../../useContext/searchContext";
-import axios from "axios";
-import zIndex from "@material-ui/core/styles/zIndex";
-import  "./cards.scss";
+import SearchContext from '../../../useContext/searchContext';
+import './cards.scss';
 
 const Cards = ({data}) => {
     // useContext
@@ -30,7 +28,7 @@ const Cards = ({data}) => {
 
     // console.log("RETURN" , initialPage,  activePage);
     // console.log(initialData);
-    
+
     React.useEffect(() => {
         const array = [...initialData];
         setInitialData(array.splice(0, pageSize));
@@ -57,14 +55,14 @@ const Cards = ({data}) => {
         })
         .catch(error => console.error(error));
     }, [filterParametr]);
-    
-    
+
+
     React.useEffect(() => {
         if (initialPage > numberOfPages) {
             setInitialPage(numberOfPages);
         }
     }, [initialPage, numberOfPages]);
-    
+
     React.useEffect(() => {
         const dataCount = data.length;
         const countPages = Math.ceil(dataCount / pageSize);
@@ -98,8 +96,7 @@ const Cards = ({data}) => {
 
     const handler = (id, originalName) => {
         Router.push({
-          pathname: '/item',
-          query: { id: id, name: originalName },
+          pathname: `/item/${id}`,
         })
     };
 
@@ -140,35 +137,51 @@ const Cards = ({data}) => {
         return stars;
     };
 
-    const cards = initialData.map((map, index) => {
+    const cards = initialData.map((card, index) => {
         return (
             <Grid item xs={4} key = {index}>
-                <div style = {{height: "400px", position: "relative"}} onMouseOver = {() => mouseEventTru(map._id)} onMouseLeave = {() => mouseEventFalse(map._id)} key = {index}>
+                <div style={{ height: '400px', position: 'relative' }} onMouseOver={() => mouseEventTru(card._id)}
+                     onMouseLeave={() => mouseEventFalse(card._id)} key={index}>
                 {/* <div style = {{height: "400px", position: "relative"}} onMouseOver = {() => mouseEventTru(map._id)}  key = {index}> */}
-                    <Link href = {{ pathname: '/item', query: {id: map._id, name: map.OriginalName}}} >    
+                    <Link href={`/item/${card._id}`}>
                         <a>
-                            <img style = {{width: "100%", height: "100%"}} src={map.Images} alt={map.Name}/>
+                            <img style={{ width: '100%', height: '100%' }} src={card.Images} alt={card.Name}/>
                         </a>
                     </Link>
                     <div className = "hello">
-                        <div style = {{cursor: "pointer"}} onClick = {() => handler(map._id, map.OriginalName)} className = "card_title">
-                            {map.Name}
+                        <div style={{ cursor: 'pointer' }} onClick={() => handler(card._id, card.OriginalName)}
+                             className="card_title">
+                            {card.Name}
                         </div>
-                        <div style = {{display: "flex", flexDirection: "row", justifyContent: "space-around", margin: "0 3px 3px 3px"}}>{ratingStar(map.Rating)}</div>
+                        <div style={{
+                            display: 'flex',
+                            flexDirection: 'row',
+                            justifyContent: 'space-around',
+                            margin: '0 3px 3px 3px',
+                        }}>{ratingStar(card.Rating)}</div>
                     </div>
-                        {mausAction.id === map._id && mausAction.status === true ? <div onClick = {() => handler(map._id, map.OriginalName)} className = "color">
-                            <ul className = "ulCardsStyle" type="none">
-                                <li><b>Выпуск: {map.Year}</b></li>
-                                <li><b>Категория: {map.TypeOf}</b></li>
-                                <li><b>Количество-серий: {map.NumOfSeries}</b></li>
-                                <li><b>Возврастной рейтинг: {map.AgeRating}</b></li>
-                                <li><b>Жанры: {map.Genre.map((map, index) => {return (<a style = {{background: "#C03E2C", margin: "0 3px 0 0", borderRadius: "5px", lineHeight: "140%"}}>{`${map} `}</a>)})}</b></li>
-                                <li><b>Голосовали: {map.Voted}</b></li>
-                                <li><b>Коментировали: {map.Commented}</b></li>
-                                <li><b>Посмотрели: {map.Looked}</b></li>
-                                <br />
-                            </ul>
-                        </div> : <div></div>}
+                    {mausAction.id === card._id && mausAction.status === true && (
+                      <div onClick={() => handler(card._id, card.OriginalName)} className="color">
+                          <ul className="ulCardsStyle" type="none">
+                              <li><b>Выпуск: {card.Year}</b></li>
+                              <li><b>Категория: {card.TypeOf}</b></li>
+                              <li><b>Количество-серий: {card.NumOfSeries}</b></li>
+                              <li><b>Возврастной рейтинг: {card.AgeRating}</b></li>
+                              <li><b>Жанры: {card.Genre.map((map, index) => {
+                                  return (<a style={{
+                                      background: '#C03E2C',
+                                      margin: '0 3px 0 0',
+                                      borderRadius: '5px',
+                                      lineHeight: '140%',
+                                  }}>{`${map} `}</a>);
+                              })}</b></li>
+                              <li><b>Голосовали: {card.Voted}</b></li>
+                              <li><b>Коментировали: {card.Commented}</b></li>
+                              <li><b>Посмотрели: {card.Looked}</b></li>
+                              <br/>
+                          </ul>
+                      </div>
+                    )}
                 </div>
             </Grid>
         )
@@ -198,7 +211,7 @@ const Cards = ({data}) => {
             // console.log(index, pageNumber, visiblePiece.type);
             return <PaginationButton style = {{ ...classButton}} key={key} onClick={() => {onClick(pageNumber)}} >{pageNumber}</PaginationButton>;
         }
-        
+
             const classArrow = visiblePiece.isDisabled ? {backgroundColor: "#C03E2C"} : {backgroundColor: "#DCB926"};
           return <button key={key} style = {{borderStyle: "none", cursor: "pointer", ...classArrow}} disabled={visiblePiece.isDisabled} onClick={() => onClick(pageNumber)}>
             {visiblePiece.type === 'next' ? '>' : '<'}

@@ -3,7 +3,7 @@ import { Document } from 'mongoose';
 export interface Moovie extends Document {
   readonly Name: string;
   readonly OriginalName: string;
-  readonly Genre: Array<string>;
+  readonly Genre: string[];
   readonly Images: string;
   readonly Year: number;
   readonly TypeOf: string;

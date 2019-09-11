@@ -6,7 +6,7 @@ const News = () => {
     return (
         <>
             <NewsWraper>
-                <img style = {{width: "100%"}} src="static/images/news.png" />
+                <img style = {{width: "100%"}} src="/static/images/news.png"  alt={''}/>
             </NewsWraper>
         </>
     )
