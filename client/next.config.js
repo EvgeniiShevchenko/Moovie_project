@@ -1,36 +1,35 @@
 const withPlugins = require('next-compose-plugins');
-const withBundleAnalyzer = require("@zeit/next-bundle-analyzer");
-const withSass = require("@zeit/next-sass");
-const withCSS = require('@zeit/next-css')
-const withTypescript = require('@zeit/next-typescript')
-const FilterWarningsPlugin = require('webpack-filter-warnings-plugin')
-
+const withBundleAnalyzer = require('@zeit/next-bundle-analyzer');
+const withSass = require('@zeit/next-sass');
+const withCSS = require('@zeit/next-css');
+// const FilterWarningsPlugin = require('webpack-filter-warnings-plugin');
 
 module.exports = withPlugins([
-  [withCSS, 
-  //     {
-  //     webpack (config) {
-  //       config.module.rules.push(
-  //           {
-  //       test: /\.css$/,
-  //       use: [
-  //         // style-loader
-  //         { loader: 'style-loader' },
-  //         // css-loader
-  //         {
-  //           loader: 'css-loader',
-  //           options: {
-  //             modules: true
-  //           }
-  //         },
-  //         // sass-loader
-  //         { loader: 'sass-loader' }
-  //       ]
-  //     }
-  //       )
-  //       return config
-  //     }
-  //   }
+  [
+    withCSS,
+    //     {
+    //     webpack (config) {
+    //       config.module.rules.push(
+    //           {
+    //       test: /\.css$/,
+    //       use: [
+    //         // style-loader
+    //         { loader: 'style-loader' },
+    //         // css-loader
+    //         {
+    //           loader: 'css-loader',
+    //           options: {
+    //             modules: true
+    //           }
+    //         },
+    //         // sass-loader
+    //         { loader: 'sass-loader' }
+    //       ]
+    //     }
+    //       )
+    //       return config
+    //     }
+    //   }
     // {
     //   cssModules: true,
     //   cssLoaderOptions: {
@@ -40,39 +39,48 @@ module.exports = withPlugins([
     // }
     {
       cssLoaderOptions: {
-      url: false
-      }
-    }
-  ],
-  [withSass, {
-    webpack (config, options) {
-        config.module.rules.push({
-            test: /\.(png|jpg|gif|svg|eot|ttf|woff|woff2)$/,
-            use: {
-                loader: 'url-loader',
-                options: {
-                    limit: 100000
-                }
-            }
-        });
-  
-        return config;
-    }
-  }],
-  [withBundleAnalyzer, {
-    analyzeServer: ["server", "both"].includes(process.env.BUNDLE_ANALYZE),
-    analyzeBrowser: ["browser", "both"].includes(process.env.BUNDLE_ANALYZE),
-    bundleAnalyzerConfig: {
-      server: {
-        analyzerMode: 'static',
-        reportFilename: '../bundles/server.html'
+        url: false,
       },
-      browser: {
-        analyzerMode: 'static',
-        reportFilename: '../bundles/client.html'
-      }
     },
-  }]
+    // {
+    //   cssModules: true
+    // }
+  ],
+  [
+    withSass,
+    {
+      webpack(config, options) {
+        config.module.rules.push({
+          test: /\.(png|jpg|gif|svg|eot|ttf|woff|woff2)$/,
+          use: {
+            loader: 'url-loader',
+            options: {
+              limit: 100000,
+            },
+          },
+        });
+
+        return config;
+      },
+    },
+  ],
+  [
+    withBundleAnalyzer,
+    {
+      analyzeServer: ['server', 'both'].includes(process.env.BUNDLE_ANALYZE),
+      analyzeBrowser: ['browser', 'both'].includes(process.env.BUNDLE_ANALYZE),
+      bundleAnalyzerConfig: {
+        server: {
+          analyzerMode: 'static',
+          reportFilename: '../bundles/server.html',
+        },
+        browser: {
+          analyzerMode: 'static',
+          reportFilename: '../bundles/client.html',
+        },
+      },
+    },
+  ],
 ]);
 
 // module.exports = withCSS({

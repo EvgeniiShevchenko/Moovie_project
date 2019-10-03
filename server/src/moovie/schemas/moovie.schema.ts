@@ -4,45 +4,45 @@ export const MoovieSchema = new mongoose.Schema(
   {
     Name: {
       type: String,
-      required: true
+      required: true,
     },
     OriginalName: {
       type: String,
     },
     Genre: {
       type: Array,
-      required: true
+      required: true,
     },
     Images: {
       type: String,
-      required: true
+      required: true,
     },
     Year: {
       type: Number,
-      required: true
+      required: true,
     },
     TypeOf: {
       type: String,
-      required: true
+      required: true,
     },
     Updated: {
       type: Date,
-      default: Date.now
+      default: Date.now,
     },
     Status: {
       type: String,
-      required: true
+      required: true,
     },
     NumOfSeries: {
       type: Number,
-      default: 0
+      default: 0,
     },
     Rating: {
       type: Number,
     },
     Studio: {
       type: String,
-      required: true
+      required: true,
     },
     StudioLogo: {
       type: String,
@@ -55,28 +55,27 @@ export const MoovieSchema = new mongoose.Schema(
     },
     AgeRating: {
       type: String,
-      required: true
+      required: true,
     },
     Country: {
       type: String,
     },
     Voted: {
       type: Number,
-      default: 0
+      default: 0,
     },
     Looked: {
       type: Number,
-      default: 0
+      default: 0,
     },
     Commented: {
       type: Number,
-      default: 0
+      default: 0,
     },
     Description: {
       type: String,
-      required: true
+      required: true,
     },
   },
-  { collection: 'moovis' },
+  { collection: 'moovis' }
 );
-

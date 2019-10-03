@@ -10,6 +10,19 @@
 //       ]]
 // }
 {
-    "presets": ["next/babel"],
-    "plugins": [["styled-components", { "ssr": true }]],
+    "presets": [
+    //     ["next/babel", {
+    //     "preset-env": { "targets": { "node": "current" } }
+    //   }]
+      ["next/babel",
+        {
+          "preset-env": {
+            "targets": {
+              "chrome": "73",
+              "node": "11"
+            }
+          }
+        }]
+    ],
+    "plugins": [["styled-components", { "ssr": true }]]
 }

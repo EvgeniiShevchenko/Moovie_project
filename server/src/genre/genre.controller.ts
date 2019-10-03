@@ -6,7 +6,7 @@ import { Genre } from './interfaces/genre.interface';
 
 @Controller('api/genre')
 export class GenreController {
-  constructor(private readonly mooviesService: GenreService) {}
+  constructor(private readonly mooviesService: GenreService) { }
 
   @Get()
   async findAll(): Promise<Genre[]> {

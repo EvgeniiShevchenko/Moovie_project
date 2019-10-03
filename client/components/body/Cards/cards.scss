@@ -8,17 +8,17 @@
     top: 80%;
     height: 20%;
     width: 100%;
-    background-color: rgba(0,0,0,0.5);
+    background-color: rgba(0, 0, 0, 0.5);
     z-index: 2;
 }
 
-.card_title{
+.card_title {
     @import url('https://fonts.googleapis.com/css?family=Cormorant+Infant&display=swap');
     font-family: 'Cormorant Infant', serif;
     font-size: 20px;
     display: flex;
     justify-content: center;
-    color:white;
+    color: white;
     text-align: center;
 }
 
@@ -29,11 +29,11 @@
     top: 0px;
     height: 80%;
     width: 100%;
-    background-color: rgba(220,185,38, 0.5);
+    background-color: rgba(220, 185, 38, 0.5);
     z-index: 3;
 }
 
-.ulCardsStyle{
+.ulCardsStyle {
     @import url('https://fonts.googleapis.com/css?family=Cormorant+Infant&display=swap');
     font-family: 'Cormorant Infant', serif;
     height: 100%;
@@ -43,13 +43,12 @@
     margin: 10px 0 0 -35px;
     font-size: 18px;
     color: rgb(250, 250, 250);
-    text-shadow: 5px 2px 5px rgba(0,0,0,1), -5px -2px 5px rgba(0,0,0,1);
+    text-shadow: 5px 2px 5px rgba(0, 0, 0, 1), -5px -2px 5px rgba(0, 0, 0, 1);
+    list-style-type: none;
 }
 
-.filterResetButton{
+.filterResetButton {
     width: 36px;
     margin: 0 0 0 5px;
-    box-shadow: 0px 1px 5px 0px rgba(0,0,0,0.2), 0px 2px 2px 0px rgba(0,0,0,0.14), 0px 3px 1px -2px rgba(0,0,0,0.12);
+    box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.2), 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 3px 1px -2px rgba(0, 0, 0, 0.12);
 }
-
-
