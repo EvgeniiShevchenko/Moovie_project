@@ -1,6 +1,10 @@
 import React, { useState, FunctionComponent } from 'react';
 import styled from 'styled-components';
 import Grid from '@material-ui/core/Grid';
+import root from 'window-or-global';
+
+
+// Import interfaces
 import { ItemFace } from "../../../interfaces";
 
 interface Props {
@@ -9,7 +13,7 @@ interface Props {
 
 const Item: FunctionComponent<Props> = ({ data }): JSX.Element => {
 
-  if (typeof document !== 'undefined' && data.length !== 0) {
+  if (root.window) {
     return (
       <>
         <CardWraper>

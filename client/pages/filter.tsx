@@ -1,13 +1,20 @@
+import { NextPage, NextPageContext, NextComponentType } from "next";
+import { withRouter, SingletonRouter, Router } from 'next/router';
 import React, { FunctionComponent } from 'react';
-// import Page from "../components/body/filter/filter_page";
+import axios from 'axios';
 import dynamic from 'next/dynamic';
 import styled from 'styled-components';
-import { withRouter, SingletonRouter, Router } from 'next/router';
-import { NextPage, NextPageContext, NextComponentType } from "next";
-import axios from 'axios';
+
+// Import configuration
+import { url } from "../config";
+
+// Import context
 import LayoutContext from '../components/LayoutContext';
+
+// Import interfaces
 import { ItemFace } from "../interfaces";
 
+// Import components
 const Page = dynamic(import('../components/body/filter/filter_page'), { ssr: false });
 
 interface Context extends NextPageContext {
@@ -39,8 +46,8 @@ const FilterPage: NextPage<Props> = ({ data = [], genres = [] }) => {
 };
 
 FilterPage.getInitialProps = async ({ Component, router, ctx }: Context) => {
-  const moovies = await axios.get(`http://localhost:5000/api/moovie`);
-  const genres = await axios.get(`http://localhost:5000/api/genre`);
+  const moovies = await axios.get(`${url}api/moovie`);
+  const genres = await axios.get(`${url}api/genre`);
   return { data: moovies.data, genres: genres.data, Component, router, ctx };
 };
 

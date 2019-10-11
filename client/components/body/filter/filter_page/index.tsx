@@ -1,15 +1,21 @@
-import React from 'react';
+import React, { FunctionComponent } from 'react';
 import Link from 'next/link';
 import _ from 'lodash';
 import InfiniteScrollComponent from 'react-infinite-scroll-component';
-import Grider from 'react-grider';
-import dynamic from 'next/dynamic';
+// @ts-ignore
+import Grider from "react-grider";
 import axios from 'axios';
+import root from 'window-or-global';
+
+// Import interfaces
+import { GenreFace, ItemFace } from "../../../../interfaces";
+
+// Import styles
 import './filter.scss';
 import './index.scss';
 
 // import for ui component styling
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 
 // import for table displaed
 import Table from '@material-ui/core/Table';
@@ -28,10 +34,8 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 // import for disaplaed list genres
 import List from '@material-ui/core/List';
-import Divider from '@material-ui/core/Divider';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
-import ListSubheader from '@material-ui/core/ListSubheader';
 
 // import for styled filter-seting panel
 import FormControl from '@material-ui/core/FormControl';
@@ -41,10 +45,13 @@ import OutlinedInput from '@material-ui/core/OutlinedInput';
 import MenuItem from '@material-ui/core/MenuItem';
 import TextField from '@material-ui/core/TextField';
 import SearchContext from '../../../../useContext/searchContext';
+// import {ScrollbarProps} from "@types/react-smooth-scrollbar";
+import Scroll, { ScrollbarProps } from "react-smooth-scrollbar";
 
-const Scrollbar = dynamic(import('react-smooth-scrollbar'), { ssr: false });
+// const Scroll, {propTypes} = dynamic(import('react-smooth-scrollbar'), { ssr: false });
+const Scrollbar: React.ComponentType<ScrollbarProps> = Scroll;
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme: Theme) => createStyles({
   root: {
     width: '100%',
     backgroundColor: 'rgba(192,62,44,0)',
@@ -90,21 +97,21 @@ const columns = [
     id: 'name',
     label: '№',
     minWidth: 10,
-    align: 'center',
+    align: "center" as const,
     pading: '14px 0px 14px 10px',
   },
   {
     id: 'code',
     label: 'Имя',
     minWidth: 50,
-    align: 'left',
+    align: "left" as const,
     pading: '14px 0px 14px 10px',
   },
   {
     id: 'population',
     label: 'Тип',
     minWidth: 50,
-    align: 'center',
+    align: "center" as const,
     pading: '14px 0px 14px 10px',
     //   format: (value) => value.toLocaleString(),
   },
@@ -112,7 +119,7 @@ const columns = [
     id: 'size',
     label: 'Год',
     minWidth: 50,
-    align: 'center',
+    align: "center" as const,
     pading: '14px 0px 14px 10px',
     //   format: (value) => value.toLocaleString(),
   },
@@ -120,31 +127,10 @@ const columns = [
     id: 'density',
     label: 'Рейтинг',
     minWidth: 50,
-    align: 'center',
+    align: "center" as const,
     pading: '14px 0px 14px 10px',
     //   format: (value) => value.toFixed(2),
   },
-];
-
-function createData(name, calories, fat, carbs, protein) {
-  return {
-    name,
-    calories,
-    fat,
-    carbs,
-    protein,
-  };
-}
-
-const rows = [
-  createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-  createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-  createData('Eclair', 262, 16.0, 24, 6.0),
-  createData('Cupcake', 305, 3.7, 67, 4.3),
-  createData('Gingerbread', 356, 16.0, 49, 3.9),
-  createData('Gingerbread', 356, 16.0, 49, 3.9),
-  createData('Gingerbread', 356, 16.0, 49, 3.9),
-  createData('Gingerbread', 356, 16.0, 49, 3.9),
 ];
 
 const exampleText = `
@@ -168,9 +154,15 @@ const exampleText = `
     provident
     ab beatae deleniti quas dolorum tempora, repellendus temporibus ut unde eius debitis
     explicabo! Necessitatibus harum voluptatum aperiam.
-  `;
+`;
 
-const FilterPage = ({ data, genres }) => {
+interface Props {
+  data: ItemFace[],
+  genres: GenreFace[],
+};
+
+const FilterPage: FunctionComponent<Props> = ({ data, genres }) => {
+  console.log(data, genres);
   // useContext
   const {
     filterParametr,
@@ -186,6 +178,7 @@ const FilterPage = ({ data, genres }) => {
   } = React.useContext(SearchContext);
   // useStates
   const [initialData, setInitialData] = React.useState(data);
+  console.log(initialData);
   const [selectButton, setSelectButton] = React.useState([]);
   const [labelWidth, setLabelWidth] = React.useState(0);
   const [yearsList, setYearsList] = React.useState([]);
@@ -193,6 +186,7 @@ const FilterPage = ({ data, genres }) => {
     id: '',
     name: '',
     originalname: '',
+    slug: '',
     description: exampleText,
     genre: [],
     images: '',
@@ -216,8 +210,9 @@ const FilterPage = ({ data, genres }) => {
     id: '',
     name: '',
     originalname: '',
+    slug: '',
     description: exampleText,
-    genre: [],
+    genre: [''],
     images: '',
     year: 0,
     country: '',
@@ -264,9 +259,9 @@ const FilterPage = ({ data, genres }) => {
   //     setExpanded(isExpanded ? panel : false);
   // };
 
-  const classes = useStyles();
+  const classes = useStyles({});
 
-  const selectButtonGenre = (id, name, info) => {
+  const selectButtonGenre = (id: any, name: string, info: string) => {
     const sameid = selectButton.find(haveid => {
       return haveid.id === id;
     });
@@ -288,9 +283,7 @@ const FilterPage = ({ data, genres }) => {
     }
   };
 
-  const handleChange = event => {
-    const { name } = event.target;
-    const { value } = event.target;
+  const handleChange = (name: string | undefined, value: unknown) => {
     setValues({ ...values, [name]: value });
     if (name === 'from' || name === 'to') {
       setValues({ ...values, countSeries: { ...values.countSeries, [name]: value } });
@@ -300,7 +293,8 @@ const FilterPage = ({ data, genres }) => {
     }
   };
 
-  const handleLoadMore = async page => {
+
+  const handleLoadMore = async (page: number): Promise<void> => {
     // console.log("current page", page);
     const loadPage = page + scrollPage;
     // Some API call to fetch the next page
@@ -321,12 +315,12 @@ const FilterPage = ({ data, genres }) => {
     const genre =
       selectButton.length !== 0
         ? selectButton.map(genre => {
-            return genre.name.trim();
-          })
-        : selectButton;
+          return genre.name.trim();
+        })
+        : [''];
     const filterPervState = {
       status: false,
-      Genre: [],
+      Genre: [''],
       TypeOf: '',
       Status: '',
       Year: {
@@ -355,19 +349,15 @@ const FilterPage = ({ data, genres }) => {
         TypeOf: values.type,
         Status: values.status,
         Year: {
-          from:
-            values.years.fromYear === '' ? 0 : values.years.fromYear === null ? 0 : parseInt(values.years.fromYear, 10),
-          to: values.years.toYear === '' ? 0 : values.years.toYear === null ? 0 : parseInt(values.years.toYear, 10),
+          from: values.years.fromYear === 'От' ? 0 : typeof values.years.fromYear === 'string' ? parseInt(values.years.fromYear, 10) : values.years.fromYear,
+          to: values.years.toYear === 'До' ? 0 : typeof values.years.toYear === 'string' ? parseInt(values.years.toYear, 10) : values.years.toYear,
         },
         NumOfSeries: {
-          from:
-            values.countSeries.from === ''
-              ? 0
-              : values.countSeries.from === null
-              ? 0
-              : parseInt(values.countSeries.from, 10),
+          from: values.countSeries.from === 'От' ? 0 : typeof values.countSeries.from === 'string'
+            ? parseInt(values.countSeries.from, 10)
+            : values.countSeries.from,
           to:
-            values.countSeries.to === '' ? 0 : values.countSeries.to === null ? 0 : parseInt(values.countSeries.to, 10),
+            values.countSeries.to === 'До' ? 0 : typeof values.countSeries.to === 'string' ? parseInt(values.countSeries.to, 10) : values.countSeries.to,
         },
         AgeRating: values.age,
       },
@@ -413,13 +403,14 @@ const FilterPage = ({ data, genres }) => {
     }
   };
 
-  const tableButtonHeandler = item => {
+  const tableButtonHeandler = (item: ItemFace): void => {
     setBrowserSeting(true);
     setDescription({
       ...description,
       id: item._id,
       name: item.Name,
       originalname: item.OriginalName,
+      slug: item.Slug,
       description: item.Description,
       genre: item.Genre,
       images: item.Images,
@@ -430,7 +421,6 @@ const FilterPage = ({ data, genres }) => {
       studio: item.Studio,
       agerating: item.AgeRating,
     });
-    // alert("I'm working good");
   };
 
   const renderYears =
@@ -441,12 +431,12 @@ const FilterPage = ({ data, genres }) => {
         </MenuItem>
       ))
     ) : (
-      <MenuItem value=''>
-        <em>None</em>
-      </MenuItem>
-    );
+        <MenuItem value=''>
+          <em>None</em>
+        </MenuItem>
+      );
 
-  if (typeof window !== 'undefined') {
+  if (root.window) {
     return (
       <>
         <Grider height='auto' width='100%' cols='25% 50% 25%' rows='307px 307px'>
@@ -465,7 +455,6 @@ const FilterPage = ({ data, genres }) => {
               className='test'
               damping={0.05}
               thumbMinSize={10}
-              syncCallbacks
               renderByPixels
               alwaysShowTracks
               continuousScrolling
@@ -494,12 +483,12 @@ const FilterPage = ({ data, genres }) => {
                               alt='Genre button active'
                             />
                           ) : (
-                            <img
-                              style={{ width: '25px' }}
-                              src='/static/images/genredefaultbutton.png'
-                              alt='Genre button default'
-                            />
-                          )}
+                              <img
+                                style={{ width: '25px' }}
+                                src='/static/images/genredefaultbutton.png'
+                                alt='Genre button default'
+                              />
+                            )}
                         </div>
                       </ListItem>
                     );
@@ -518,7 +507,6 @@ const FilterPage = ({ data, genres }) => {
                 className='test'
                 damping={0.01}
                 thumbMinSize={1}
-                syncCallbacks
                 renderByPixels
                 alwaysShowTracks
                 continuousScrolling
@@ -542,13 +530,7 @@ const FilterPage = ({ data, genres }) => {
                               alt='Zoom-buttom'
                             />
                             <Link
-                              href={{
-                                pathname: '/item',
-                                query: {
-                                  id: description.id,
-                                  name: description.originalname,
-                                },
-                              }}
+                              as={`/title/${description.slug}`} href={`/item?name=${description.slug}`}
                             >
                               <a>
                                 <img className='itemImages' src={description.images} alt={description.name} />
@@ -561,8 +543,8 @@ const FilterPage = ({ data, genres }) => {
                                 color: 'rgba(255, 255, 255, 0.7)',
                                 padding: '0 0 10px 5px',
                                 margin: 'auto',
+                                listStyleType: 'none'
                               }}
-                              type='none'
                             >
                               <li>Выпуск: {description.year}</li>
                               <li>Производство: {description.country}</li>
@@ -573,8 +555,7 @@ const FilterPage = ({ data, genres }) => {
                                     <button
                                       type='button'
                                       key={index}
-                                      id={index}
-                                      onClick={() => selectButtonGenre()}
+                                      id={index + ''}
                                       style={{
                                         background: '#C03E2C',
                                         margin: '0 3px 0 0',
@@ -604,17 +585,17 @@ const FilterPage = ({ data, genres }) => {
                         </div>
                       </div>
                     ) : (
-                      <p style={{ textAlign: 'justify', color: 'rgba(255, 255, 255, 0.7)' }}>
-                        <input
-                          onClick={() => setButtomClickHeandler(!buttomZoomClickHeandler)}
-                          type='image'
-                          style={{ width: '36px', float: 'right', marginLeft: '5px' }}
-                          src='/static/images/filterbuttonzoom.png'
-                          alt='Zoom-buttom'
-                        />
-                        {description.description}
-                      </p>
-                    )}
+                        <p style={{ textAlign: 'justify', color: 'rgba(255, 255, 255, 0.7)' }}>
+                          <input
+                            onClick={() => setButtomClickHeandler(!buttomZoomClickHeandler)}
+                            type='image'
+                            style={{ width: '36px', float: 'right', marginLeft: '5px' }}
+                            src='/static/images/filterbuttonzoom.png'
+                            alt='Zoom-buttom'
+                          />
+                          {description.description}
+                        </p>
+                      )}
                   </div>
                 </div>
               </Scrollbar>
@@ -633,11 +614,11 @@ const FilterPage = ({ data, genres }) => {
                 style={
                   buttomZoomClickHeandler
                     ? {
-                        height: '307px',
-                        minWidth: '300px',
-                        overflow: 'auto',
-                        borderRadius: '0 0 0 25px',
-                      }
+                      height: '307px',
+                      minWidth: '300px',
+                      overflow: 'auto',
+                      borderRadius: '0 0 0 25px',
+                    }
                     : { height: '307px', minWidth: '500px', overflow: 'auto' }
                 }
               >
@@ -657,8 +638,8 @@ const FilterPage = ({ data, genres }) => {
                           <TableCell
                             size='small'
                             padding='checkbox'
-                            key={column.id}
                             align={column.align}
+                            key={column.id}
                             style={{ width: column.minWidth, padding: column.pading }}
                           >
                             {column.label}
@@ -725,13 +706,11 @@ const FilterPage = ({ data, genres }) => {
                     />
                   </a>
                 </Link>
-                {/* <input className = "filterPageButtomClose" type="image" src="/static/images/filterbuttomzoom.png" alt="filter-buttom-close"/> */}
               </div>
               <Scrollbar
                 className='test'
                 damping={0.01}
                 thumbMinSize={1}
-                syncCallbacks
                 renderByPixels
                 alwaysShowTracks={false}
                 continuousScrolling
@@ -748,13 +727,6 @@ const FilterPage = ({ data, genres }) => {
                       <Typography className={classes.heading}>Filter Parametrs</Typography>
                     </ExpansionPanelSummary>
                     <ExpansionPanelDetails style={{ backgroundColor: 'rgba(220, 185, 38, 0.5)' }}>
-                      {/* <Typography>
-                                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-                                                malesuada
-                                                lacus
-                                                ex,
-                                                sit amet blandit leo lobortis eget.
-                                            </Typography> */}
                       <div style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
                         <FormControl
                           variant='outlined'
@@ -774,7 +746,7 @@ const FilterPage = ({ data, genres }) => {
                             MenuProps={{ classes: { paper: classes.dropdownStyle } }}
                             style={{ height: '40px' }}
                             value=''
-                            onChange={event => handleChange(event)}
+                            onChange={event => handleChange(event.target.name, event.target.value)}
                             input={<OutlinedInput labelWidth={labelWidth} name='type' id='outlined-age-simple' />}
                           >
                             <MenuItem value=''>
@@ -811,7 +783,7 @@ const FilterPage = ({ data, genres }) => {
                             MenuProps={{ classes: { paper: classes.dropdownStyle } }}
                             style={{ height: '40px' }}
                             value=''
-                            onChange={event => handleChange(event)}
+                            onChange={event => handleChange(event.target.name, event.target.value)}
                             input={<OutlinedInput labelWidth={labelWidth} name='status' id='outlined-age-simple' />}
                           >
                             <MenuItem value=''>
@@ -857,11 +829,11 @@ const FilterPage = ({ data, genres }) => {
                                   ref={inputLabel}
                                   htmlFor='outlined-age-simple'
                                 >
-                                  {values.years.fromYear === ''
+                                  {values.years.fromYear === '0'
                                     ? 'От'
                                     : values.years.fromYear === null
-                                    ? 'От'
-                                    : values.years.fromYear}
+                                      ? 'От'
+                                      : values.years.fromYear}
                                 </InputLabel>
                               </div>
                               <Select
@@ -870,17 +842,17 @@ const FilterPage = ({ data, genres }) => {
                                 }}
                                 style={{ maxHeight: '40px' }}
                                 value=''
-                                onChange={event => handleChange(event)}
+                                onChange={event => handleChange(event.target.name, event.target.value)}
                                 input={
                                   <OutlinedInput
                                     labelWidth={labelWidth}
-                                    onChange={event => handleChange(event)}
+                                    onChange={event => handleChange(event.target.name, event.target.value)}
                                     name='fromYear'
                                     id='outlined-age-simple'
                                   />
                                 }
                               >
-                                <MenuItem value=''>
+                                <MenuItem value='От'>
                                   <em>Пусто</em>
                                 </MenuItem>
                                 {renderYears}
@@ -902,11 +874,11 @@ const FilterPage = ({ data, genres }) => {
                                   ref={inputLabel}
                                   htmlFor='outlined-age-simple'
                                 >
-                                  {values.years.toYear === ''
+                                  {values.years.toYear === '0'
                                     ? 'До'
                                     : values.years.toYear === null
-                                    ? 'До'
-                                    : values.years.toYear}
+                                      ? 'До'
+                                      : values.years.toYear}
                                 </InputLabel>
                               </div>
                               <Select
@@ -915,10 +887,10 @@ const FilterPage = ({ data, genres }) => {
                                 }}
                                 style={{ maxHeight: '40px' }}
                                 value=''
-                                onChange={event => handleChange(event)}
+                                onChange={event => handleChange(event.target.name, event.target.value)}
                                 input={<OutlinedInput labelWidth={labelWidth} name='toYear' id='outlined-age-simple' />}
                               >
-                                <MenuItem value=''>
+                                <MenuItem value='До'>
                                   <em>Пусто</em>
                                 </MenuItem>
                                 {renderYears}
@@ -949,8 +921,12 @@ const FilterPage = ({ data, genres }) => {
                               className='focus'
                               id='standard-name'
                               placeholder='От'
-                              value={values.countSeries.from}
-                              onChange={event => handleChange(event)}
+                              value={values.countSeries.from === '0'
+                                ? 'От'
+                                : values.countSeries.from === null
+                                  ? 'От'
+                                  : values.countSeries.from}
+                              onChange={event => handleChange(event.target.name, event.target.value)}
                               margin='dense'
                               variant='outlined'
                               name='from'
@@ -965,9 +941,13 @@ const FilterPage = ({ data, genres }) => {
                               id='standard-name'
                               placeholder='До'
                               margin='dense'
-                              onChange={event => handleChange(event)}
+                              onChange={event => handleChange(event.target.name, event.target.value)}
                               variant='outlined'
-                              value={values.countSeries.to}
+                              value={values.countSeries.to === '0'
+                                ? 'До'
+                                : values.countSeries.to === null
+                                  ? 'До'
+                                  : values.countSeries.to}
                               name='to'
                               style={{
                                 width: '100%',
@@ -1006,7 +986,7 @@ const FilterPage = ({ data, genres }) => {
                             MenuProps={{ classes: { paper: classes.dropdownStyle } }}
                             style={{ height: '40px' }}
                             value=''
-                            onChange={event => handleChange(event)}
+                            onChange={event => handleChange(event.target.name, event.target.value)}
                             input={<OutlinedInput labelWidth={labelWidth} name='age' id='outlined-age-simple' />}
                           >
                             <MenuItem value=''>
@@ -1051,7 +1031,7 @@ const FilterPage = ({ data, genres }) => {
                             MenuProps={{ classes: { paper: classes.dropdownStyle } }}
                             style={{ height: '40px' }}
                             value=''
-                            onChange={event => handleChange(event)}
+                            onChange={event => handleChange(event.target.name, event.target.value)}
                             input={<OutlinedInput labelWidth={labelWidth} name='sort' id='outlined-age-simple' />}
                           >
                             <MenuItem value=''>
@@ -1084,7 +1064,7 @@ const FilterPage = ({ data, genres }) => {
                     </div>
                     <div style={{ display: 'flex', justifyContent: 'center' }}>
                       <input
-                        style={{ width: '100%', heigth: '100px' }}
+                        style={{ width: '100%', height: '100%' }}
                         type='image'
                         src='/static/images/info_framenew.png'
                         alt='Information frame'

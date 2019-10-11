@@ -1,15 +1,22 @@
 import React, { ReactNode, SetStateAction, Dispatch } from 'react';
+import dynamic from "next/dynamic";
 import Link from 'next/link';
 import Router from 'next/router';
 import { usePagination } from 'react-pagination-hook';
-import styled from 'styled-components';
-// import fetch from "unfetch";
 import Grid from '@material-ui/core/Grid';
-import axios from 'axios';
-import SearchContext from '../../../useContext/searchContext';
-import { Usecontextdata } from "../../../interfaces";
+import root from "window-or-global";
+
+// Import styles
+// @ts-ignore
+// dynamic(import('./cards.scss'), { ssr: false });
 import './cards.scss';
+
+// Import interfaces
 import { ItemFace } from "../../../interfaces";
+import { Usecontextdata } from "../../../interfaces";
+
+//  Import context
+import SearchContext from '../../../useContext/searchContext';
 
 interface Props {
   data: Array<ItemFace>,
@@ -38,9 +45,6 @@ const Cards: React.FunctionComponent<Props> = ({ data }: Props): JSX.Element => 
     numberOfPages,
     maxButtons,
   });
-
-  // console.log("RETURN" , initialPage,  activePage);
-  // console.log(initialData);
 
   React.useEffect(() => {
     const array = [...initialData];
@@ -106,13 +110,6 @@ const Cards: React.FunctionComponent<Props> = ({ data }: Props): JSX.Element => 
     // console.log(mausAction);
   };
 
-  const handler = (id: string, originalName: string) => {
-    Router.push({
-      pathname: '/item',
-      query: { id, name: originalName },
-    });
-  };
-
   const ratingStar = (rating: number) => {
     // console.log(rating);
     const ratingArray = [];
@@ -155,169 +152,149 @@ const Cards: React.FunctionComponent<Props> = ({ data }: Props): JSX.Element => 
     return stars;
   };
 
-  const cards = initialData.map((map, index) => {
+  const cards = initialData.map((item, index) => {
     return (
       <Grid item xs={4} key={index}>
         <div
           style={{ height: '400px', position: 'relative' }}
-          onMouseOver={() => mouseEventTru(map._id)}
-          onFocus={() => mouseEventTru(map._id)}
-          onMouseLeave={() => mouseEventFalse(map._id)}
-          onBlur={() => mouseEventTru(map._id)}
+          onMouseOver={() => mouseEventTru(item._id)}
+          onFocus={() => mouseEventTru(item._id)}
+          onMouseLeave={() => mouseEventFalse(item._id)}
+          onBlur={() => mouseEventTru(item._id)}
           key={index}
         >
-          {/* <div style = {{height: "400px", position: "relative"}} onMouseOver = {() => mouseEventTru(map._id)}  key = {index}> */}
-          <Link href={{ pathname: '/item', query: { id: map._id, name: map.OriginalName } }}>
-            <a>
-              <img style={{ width: '100%', height: '100%' }} src={map.Images} alt={map.Name} />
-            </a>
-          </Link>
-          <div className='hello'>
-            <div
-              style={{ cursor: 'pointer' }}
-              onClick={() => handler(map._id, map.OriginalName)}
-              className='card_title'
-            >
-              {map.Name}
-            </div>
+          <img style={{ width: '100%', height: '100%' }} src={item.Images} alt={item.Name} />
+          <div className='cardTitleName'>
+            <Link as={`/title/${item.Slug}`} href={`/item?name=${item.Slug}`}>
+              <a style={{ textDecoration: "none" }}>
+                <div
+                  style={{ cursor: 'pointer' }}
+                  className='card_title'
+                >
+                  {item.Name}
+                </div>
+              </a>
+            </Link>
             <div
               style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-around', margin: '0 3px 3px 3px' }}
             >
-              {ratingStar(map.Rating)}
+              {ratingStar(item.Rating)}
             </div>
           </div>
-          {mausAction.id === map._id && mausAction.status === true ? (
-            <div onClick={() => handler(map._id, map.OriginalName)} className='color'>
-              <ul className='ulCardsStyle'>
-                <li>
-                  <b>Выпуск: {map.Year}</b>
-                </li>
-                <li>
-                  <b>Категория: {map.TypeOf}</b>
-                </li>
-                <li>
-                  <b>Количество-серий: {map.NumOfSeries}</b>
-                </li>
-                <li>
-                  <b>Возврастной рейтинг: {map.AgeRating}</b>
-                </li>
-                <li>
-                  <b>
-                    Жанры:{' '}
-                    {map.Genre.map((map: Object, index: number) => {
-                      return (
-                        <a
-                          style={{
-                            background: '#C03E2C',
-                            margin: '0 3px 0 0',
-                            borderRadius: '5px',
-                            lineHeight: '140%',
-                          }}
-                        >{`${map} `}</a>
-                      );
-                    })}
-                  </b>
-                </li>
-                <li>
-                  <b>Голосовали: {map.Voted}</b>
-                </li>
-                <li>
-                  <b>Коментировали: {map.Commented}</b>
-                </li>
-                <li>
-                  <b>Посмотрели: {map.Looked}</b>
-                </li>
-                <br />
-              </ul>
-            </div>
+          {mausAction.id === item._id && mausAction.status === true ? (
+            <Link as={`/title/${item.Slug}`} href={`/item?name=${item.Slug}`}>
+              <a>
+                <div className='cardItemHoverEffect'>
+                  <ul className='ulCardsStyle'>
+                    <li>
+                      <b>Выпуск: {item.Year}</b>
+                    </li>
+                    <li>
+                      <b>Категория: {item.TypeOf}</b>
+                    </li>
+                    <li>
+                      <b>Количество-серий: {item.NumOfSeries}</b>
+                    </li>
+                    <li>
+                      <b>Возврастной рейтинг: {item.AgeRating}</b>
+                    </li>
+                    <li>
+                      <b>
+                        Жанры:{' '}
+                        {item.Genre.map((genre: Object, index: number) => {
+                          return (
+                            <a
+                              style={{
+                                background: '#C03E2C',
+                                margin: '0 3px 0 0',
+                                borderRadius: '5px',
+                                lineHeight: '140%',
+                              }}
+                            >{`${genre} `}</a>
+                          );
+                        })}
+                      </b>
+                    </li>
+                    <li>
+                      <b>Голосовали: {item.Voted}</b>
+                    </li>
+                    <li>
+                      <b>Коментировали: {item.Commented}</b>
+                    </li>
+                    <li>
+                      <b>Посмотрели: {item.Looked}</b>
+                    </li>
+                    <br />
+                  </ul>
+                </div>
+              </a>
+            </Link>
           ) : (
               <div />
             )}
         </div>
-      </Grid>
+      </Grid >
     );
   });
 
-  // console.log("Перезагрузка", filterParametr);
-  return (
-    <CardsWraper>
-      <Grid item container xs={9} spacing={2}>
-        {cards}
-      </Grid>
-      <ContainerWraper>
-        <ButtonWraper>
-          {visiblePieces.map((visiblePiece, index) => {
-            const key = `${visiblePiece.type}-${index}`;
 
-            if (visiblePiece.type === 'ellipsis') {
-              return <div key={key} style={{ height: '66px', width: '50px' }} />;
-            }
+  if (root.window) {
+    return (
+      <>
+        <div className='cardCardsWraper'>
+          <Grid item container xs={9} spacing={2}>
+            {cards}
+          </Grid>
+          <div className='cardContainerWraper'>
+            <div className='cardButtonWraper'>
+              {visiblePieces.map((visiblePiece, index) => {
+                const key = `${visiblePiece.type}-${index}`;
 
-            const { pageNumber } = visiblePiece;
+                if (visiblePiece.type === 'ellipsis') {
+                  return <div key={key} style={{ height: '66px', width: '50px' }} />;
+                }
 
-            if (visiblePiece.type === 'page-number') {
-              const isActive = pageNumber === activePage;
-              const classButton = isActive ? { backgroundColor: '#C03E2C' } : { backgroundColor: '#DCB926' };
-              // console.log(index, pageNumber, visiblePiece.type);
-              return (
-                <PaginationButton
-                  style={{ ...classButton }}
-                  key={key}
-                  onClick={() => {
-                    onClick(pageNumber);
-                  }}
-                >
-                  {pageNumber}
-                </PaginationButton>
-              );
-            }
+                const { pageNumber } = visiblePiece;
 
-            const classArrow = visiblePiece.isDisabled
-              ? { backgroundColor: '#C03E2C' }
-              : { backgroundColor: '#DCB926' };
-            return (
-              <button
-                type='button'
-                key={key}
-                style={{ borderStyle: 'none', cursor: 'pointer', ...classArrow }}
-                disabled={visiblePiece.isDisabled}
-                onClick={() => onClick(pageNumber)}
-              >
-                {visiblePiece.type === 'next' ? '>' : '<'}
-              </button>
-            );
-          })}
-        </ButtonWraper>
-      </ContainerWraper>
-    </CardsWraper>
-  );
+                if (visiblePiece.type === 'page-number') {
+                  const isActive = pageNumber === activePage;
+                  const classButton = isActive ? { backgroundColor: '#C03E2C' } : { backgroundColor: '#DCB926' };
+                  // console.log(index, pageNumber, visiblePiece.type);
+                  return (
+                    <button
+                      style={{ ...classButton }}
+                      className='cardPaginationButton'
+                      key={key}
+                      onClick={() => {
+                        onClick(pageNumber);
+                      }}
+                    >
+                      {pageNumber}
+                    </button>
+                  );
+                }
+
+                const classArrow = visiblePiece.isDisabled
+                  ? { backgroundColor: '#C03E2C' }
+                  : { backgroundColor: '#DCB926' };
+                return (
+                  <button
+                    type='button'
+                    key={key}
+                    style={{ borderStyle: 'none', cursor: 'pointer', ...classArrow }}
+                    disabled={visiblePiece.isDisabled}
+                    onClick={() => onClick(pageNumber)}
+                  >
+                    {visiblePiece.type === 'next' ? '>' : '<'}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      </>
+    )
+  } return <div className='cardCardsWraper'>...Loading</div>;
 };
-
-const PaginationButton = styled.button`
-  height: 66px;
-  width: 61px;
-  border-style: none;
-  cursor: pointer;
-`;
-
-const ContainerWraper = styled.div`
-  margin: 15px 0 20px 0;
-  max-width: 880px;
-  max-height: 70px;
-  display: flex;
-  justify-content: center;
-`;
-
-const ButtonWraper = styled.div`
-  display: flex;
-  width: max-content;
-  border: 2px solid #c03e2c;
-  border-radius: 4px;
-`;
-
-const CardsWraper = styled.div`
-  max-width: 1200px;
-  margin: 10px 0 0 23px;
-`;
 
 export default Cards;

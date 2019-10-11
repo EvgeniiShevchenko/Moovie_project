@@ -1,21 +1,20 @@
 import React from "react";
-import styled from "styled-components";
+import root from "window-or-global";
+
+// Import styles
+import "./news.scss";
 
 
 const News = () => {
-    return (
-        <>
-            <NewsWraper>
-                <img style = {{width: "100%"}} src="static/images/news.png" />
-            </NewsWraper>
-        </>
-    )
+    if (root.window) {
+        return (
+            <>
+                <div className='newsWraper'>
+                    <img style={{ width: "100%" }} src="static/images/news.png" />
+                </div>
+            </>
+        )
+    } return <div className='newsWraper'>...Loading</div>;
 };
-
-const NewsWraper = styled.div`
-    margin: 30px 0 0px 23px;
-    width: 880px;
-    height: 200px;
-`;
 
 export default News;

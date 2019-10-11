@@ -1,18 +1,16 @@
 import React from 'react';
-import styled from 'styled-components';
+import root from "window-or-global";
 
 const Footer = () => {
-  return (
-    <>
-      <FooterWraper>
-        <img src='static/images/Footer.png' alt='Footer tamplates' />
-      </FooterWraper>
-    </>
-  );
+  if (root.window) {
+    return (
+      <>
+        <div className='footerWraper'>
+          <img src='static/images/Footer.png' alt='Footer tamplates' />
+        </div>
+      </>
+    )
+  } return <div className='footerWraper'>...Loading</div>;
 };
-
-const FooterWraper = styled.div`
-  margin: 0 23px 15px 23px;
-`;
 
 export default Footer;

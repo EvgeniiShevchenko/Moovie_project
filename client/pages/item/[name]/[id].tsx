@@ -1,12 +1,20 @@
-import { withRouter, SingletonRouter, Router } from 'next/router';
+import { withRouter, useRouter, SingletonRouter, Router } from 'next/router';
 import { NextPage, NextPageContext, NextComponentType } from "next";
 import React from 'react';
 import Container from '@material-ui/core/Container';
-import dynamic from 'next/dynamic';
 import axios from 'axios';
-import Items from '../components/body/item';
-import Layout from '../components/Layout';
-import { ItemFace } from "../interfaces";
+
+// Import components
+import Items from '../../../components/body/item';
+
+// Import configurations
+import { url } from "../../../config";
+
+// Import wrapers
+import Layout from '../../../components/Layout';
+
+// Import intefaces
+import { ItemFace } from "../../../interfaces";
 
 
 interface Context extends NextPageContext {
@@ -24,6 +32,9 @@ interface Props {
 
 
 const Item: NextPage<Props> = ({ data = [] }) => {
+  const router = useRouter();
+  const { name } = router.query;
+
   return (
     <>
       <Container>
@@ -37,7 +48,8 @@ const Item: NextPage<Props> = ({ data = [] }) => {
 };
 
 Item.getInitialProps = async ({ Component, router, ctx, query }: Context) => {
-  const response = await axios.get(`http://localhost:5000/api/moovie/${query.id}`);
+  console.log(Component, router, ctx, query);
+  const response = await axios.get(`${url}api/moovie/${query.name}`);
   return { data: response.data, Component, router, ctx };
 };
 

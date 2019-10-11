@@ -34,14 +34,12 @@ export class MooviesService {
 
   async findAll(): Promise<Moovie[]> {
     return await this.moovieModel.find().exec();
-    // return [{name: "evgenii", price: 23}]
   }
 
   async findOne(id): Promise<Moovie[]> {
-    const result = await this.moovieModel.find({ _id: id }).exec();
+    // const result = await this.moovieModel.find({ _id: id }).exec();
+    const result = await this.moovieModel.find({ Slug: new RegExp(`${id}`, 'i') }).exec();
     return result;
-
-    // return [{name: "evgenii", price: 23}]
   }
 
   async filterSearch(curentPage, skip, limit, filter, search, itemName): Promise<Moovie[]> {
@@ -67,7 +65,7 @@ export class MooviesService {
       //   default:
       //     bufer = {"notfing": "find", "You": "luser!"};
       // } 
-      if (filter.Genre.length !== 0) {
+      if (filter.Genre[0].length !== 0) {
         // const tea = {...bufer, Genre: {$in: [filter.Genre]}}
         const tea = { ...bufer, Genre: { $all: [...filter.Genre] } }
         bufer = tea;
@@ -111,6 +109,7 @@ export class MooviesService {
       };
 
       extend(query, bufer)
+      console.log(bufer);
     };
 
     let searchTitle = "_id";

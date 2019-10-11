@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react';
-import { FilterFace } from "../interfaces";
+import { FilterFace, ValueFace } from "../interfaces";
 import SearchContext from '../useContext/searchContext';
 
 interface Props {
@@ -14,7 +14,7 @@ const LayoutContext: React.FunctionComponent<Props> = ({ children }: Props): JSX
     itemName: '',
     filter: {
       status: false,
-      Genre: [],
+      Genre: [''],
       TypeOf: '',
       Status: '',
       Year: {
@@ -33,19 +33,19 @@ const LayoutContext: React.FunctionComponent<Props> = ({ children }: Props): JSX
       param: 1,
     },
   });
-  const [values, setValues] = React.useState<{}>({
+  const [values, setValues] = React.useState<ValueFace>({
     genre: '',
     type: '',
     status: '',
     sort: '',
     age: '',
     years: {
-      fromYear: null,
-      toYear: null,
+      fromYear: '0',
+      toYear: '0',
     },
     countSeries: {
-      from: null,
-      to: null,
+      from: '0',
+      to: '0',
     },
   });
   const [searchValue, setSearchValue] = React.useState<string>('');

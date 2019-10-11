@@ -1,10 +1,16 @@
+import Head from 'next/head';
+import Link from 'next/link';
 import React, { FunctionComponent } from 'react';
 import Slider from 'react-slick';
-import Head from 'next/head';
-import styled from 'styled-components';
-import Link from 'next/link';
+import root from 'window-or-global';
+
+
+// Import interfaces
 import { ItemFace } from "../../../interfaces";
+
+// Import styles
 import './corousel.scss';
+
 
 const Corousel: FunctionComponent<{ data: ItemFace[] }> = ({ data }: { data: ItemFace[] }): JSX.Element => {
   const settings = {
@@ -19,10 +25,6 @@ const Corousel: FunctionComponent<{ data: ItemFace[] }> = ({ data }: { data: Ite
   };
 
   const moovis_list = data.map((element: ItemFace, index?: number) => {
-    // const codename = (text: any) => {
-    //     return  text.split(' ').join('-')
-    // };
-
     return (
       <div key={index}>
         <Link href={{ pathname: '/item', query: { id: element._id, name: element.OriginalName } }}>
@@ -37,7 +39,7 @@ const Corousel: FunctionComponent<{ data: ItemFace[] }> = ({ data }: { data: Ite
     );
   });
 
-  if (typeof window !== 'undefined' || data.length !== 0) {
+  if (root.window) {
     return (
       <>
         <Head>
@@ -54,20 +56,16 @@ const Corousel: FunctionComponent<{ data: ItemFace[] }> = ({ data }: { data: Ite
             href='https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick-theme.min.css'
           />
         </Head>
-        <Corousel_wraper>
+        <div className='corouselWraper'>
           <Slider {...settings}>
             {moovis_list}
             {/* <h1>Heloo error</h1> */}
           </Slider>
-        </Corousel_wraper>
+        </div>
       </>
     );
   }
-  return <div>udefined</div>;
+  return <div className='corouselWraper'>...loading</div>;
 };
 
 export default Corousel;
-
-const Corousel_wraper = styled.div`
-  margin: 15px 23px 0px 23px;
-`;

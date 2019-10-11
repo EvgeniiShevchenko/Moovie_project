@@ -9,7 +9,7 @@ const SearchContext = createContext<Usecontextdata>({
     itemName: '',
     filter: {
       status: false,
-      Genre: [],
+      Genre: [''],
       TypeOf: '',
       Status: '',
       Year: {
@@ -37,7 +37,21 @@ const SearchContext = createContext<Usecontextdata>({
   setFilterResetButtonHeandler: boolean => boolean,
   searchValue: '',
   setSearchValue: string => string,
-  values: {},
+  values: {
+    genre: '',
+    type: '',
+    status: '',
+    sort: '',
+    age: '',
+    years: {
+      fromYear: '0',
+      toYear: '0',
+    },
+    countSeries: {
+      from: '0',
+      to: '0',
+    },
+  },
   setValues: object => object,
 });
 

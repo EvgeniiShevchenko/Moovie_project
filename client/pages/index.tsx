@@ -1,16 +1,23 @@
-import { withRouter, Router } from 'next/router';
-// import { NextFunctionComponent, NextContext } from "@types/next";
 import { NextPage, NextPageContext, NextComponentType } from "next";
+import { withRouter, Router } from 'next/router';
 import React from 'react';
-import Container from '@material-ui/core/Container';
-import '../static/css/style.css';
 import axios from 'axios';
 import Layout from '../components/Layout';
-import LayoutContext from '../components/LayoutContext';
+import Container from '@material-ui/core/Container';
+
+// Import components
 import Carousel from '../components/body/corousel';
 import News from '../components/body/news';
 import Filter from '../components/body/filter';
-import Cards from '../components/body/Cards';
+import Cards from '../components/body/cards';
+
+// Import configuration
+import { url } from "../config";
+
+// Import context
+import LayoutContext from '../components/LayoutContext';
+
+// Import interfaces
 import { ItemFace } from "../interfaces";
 
 interface Context extends NextPageContext {
@@ -28,7 +35,6 @@ interface Props {
 }
 
 const Main: NextPage<Props> = ({ data = [], genres = [] }) => {
-  // console.log(data);
   return (
     <>
       <Container>
@@ -48,9 +54,9 @@ const Main: NextPage<Props> = ({ data = [], genres = [] }) => {
 };
 
 Main.getInitialProps = async ({ Component, router, ctx }: Context) => {
-  const moovies = await axios.get(`http://localhost:5000/api/moovie`);
+  const moovies = await axios.get(`${url}api/moovie`);
   const mooviesdata: ItemFace[] = moovies.data
-  const genres = await axios.get(`http://localhost:5000/api/genre`);
+  const genres = await axios.get(`${url}api/genre`);
   const genresdata: any[] = genres.data;
   return { data: mooviesdata, genres: genresdata, Component, router, ctx };
 };
