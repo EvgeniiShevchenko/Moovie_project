@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import root from 'window-or-global';
+import _ from 'lodash';
 
 // import { Router, Route, Switch, Link, BrowserRouter } from 'react-router-dom';
 
@@ -16,17 +17,17 @@ import MenuItem from '@material-ui/core/MenuItem';
 import SearchContext from '../../../useContext/searchContext';
 
 // Import scss
-import "./filter.scss";
+import './filter.scss';
 
 // Import interfaces
-import { GenreFace } from "../../../interfaces";
+import { GenreFace } from '../../../interfaces';
 
 // Import dynamic
 const Grid = dynamic(() => import('@material-ui/core/Grid'));
 
 interface Props {
-  genres: GenreFace[]
-};
+  genres: GenreFace[];
+}
 
 const Filter: FunctionComponent<Props> = ({ genres }): JSX.Element => {
   // useContext
@@ -87,16 +88,24 @@ const Filter: FunctionComponent<Props> = ({ genres }): JSX.Element => {
         TypeOf: values.type,
         Status: values.status,
         Year: {
-          // @ts-ignore
-          from: values.years.fromYear === 'От' ? 0 : values.years.fromYear === '' ? 0 : parseInt(values.years.fromYear, 10),
+          from:
+            // @ts-ignore
+            values.years.fromYear === 'От' ? 0 : values.years.fromYear === '' ? 0 : parseInt(values.years.fromYear, 10),
           // @ts-ignore
           to: values.years.toYear === 'До' ? 0 : values.years.toYear === '' ? 0 : parseInt(values.years.toYear, 10),
         },
         NumOfSeries: {
-          // @ts-ignore
-          from: values.countSeries.from === 'От' ? 0 : values.countSeries.from === '' ? 0 : parseInt(values.countSeries.from, 10),
-          // @ts-ignore
-          to: values.countSeries.to === 'До' ? 0 : values.countSeries.to === '' ? 0 : parseInt(values.countSeries.to, 10),
+          from:
+            values.countSeries.from === 'От'
+              ? 0
+              : values.countSeries.from === ''
+                ? 0
+                :
+                // @ts-ignore
+                parseInt(values.countSeries.from, 10),
+          to:
+            // @ts-ignore
+            values.countSeries.to === 'До' ? 0 : values.countSeries.to === '' ? 0 : parseInt(values.countSeries.to, 10),
         },
         AgeRating: values.age,
       },
@@ -106,27 +115,21 @@ const Filter: FunctionComponent<Props> = ({ genres }): JSX.Element => {
         param: 1,
       },
     };
-    if (
-      JSON.stringify(searchSetings.filter) === JSON.stringify(filterPervState) &&
-      JSON.stringify(searchSetings.search) === JSON.stringify(searchPervState)
-    ) {
+    if (_.isEqual(searchSetings.filter, filterPervState) && _.isEqual(searchSetings.search, searchPervState)) {
       setFilterParameter({
         ...searchSetings,
         filter: { ...searchSetings.filter, status: false },
         search: { ...searchSetings.search, status: false },
       });
-    } else if (
-      JSON.stringify(searchSetings.filter) === JSON.stringify(filterPervState) &&
-      JSON.stringify(searchSetings.search) !== JSON.stringify(searchPervState)
-    ) {
+    } else if (_.isEqual(searchSetings.filter, filterPervState) && !_.isEqual(searchSetings.search, searchPervState)) {
       setFilterParameter({
         ...searchSetings,
         filter: { ...searchSetings.filter, status: false },
         search: { ...searchSetings.search, status: true },
       });
     } else if (
-      JSON.stringify(searchSetings.filter) !== JSON.stringify(filterPervState) &&
-      JSON.stringify(searchSetings.search) === JSON.stringify(searchPervState)
+      !_.isEqual(searchSetings.filter, filterPervState) &&
+      _.isEqual(searchSetings.search, searchPervState)
     ) {
       setFilterParameter({
         ...searchSetings,
@@ -144,7 +147,7 @@ const Filter: FunctionComponent<Props> = ({ genres }): JSX.Element => {
   // {Genre: {$in: ["Комедия"]}, "TypeOf": "Сериал", "Year": {$gte: 2007, $lte: 2019},
   //  "NumOfSeries": {$gt: 12, $lte: 27}, "AgeRating": /PG-13/}
 
-  const handleChange = (name: string | undefined, value: unknown) => {
+  const handleChange = (name: string | undefined, value: unknown): void => {
     setValues({ ...values, [name]: value });
     if (name === 'from' || name === 'to') {
       setValues({ ...values, countSeries: { ...values.countSeries, [name]: value } });
@@ -154,7 +157,7 @@ const Filter: FunctionComponent<Props> = ({ genres }): JSX.Element => {
     }
   };
 
-  const filterReset = () => {
+  const filterReset = (): void => {
     setValues({
       genre: '',
       type: '',
@@ -202,7 +205,7 @@ const Filter: FunctionComponent<Props> = ({ genres }): JSX.Element => {
 
   const listGenres =
     genre.length !== 0 ? (
-      genre.map((genre, index) => {
+      _.map(genre, (genre, index) => {
         return (
           <MenuItem key={index} value={genre.Name}>
             {genre.Name}
@@ -225,7 +228,7 @@ const Filter: FunctionComponent<Props> = ({ genres }): JSX.Element => {
             </Grid>
             <Grid item xs={2}>
               {/* <a href = "/filter" > <img style = {{width: "26px", marginLeft: "40%", boxShadow: " -2px 2px 3px rgba(0,0,0,0.30)", opacity: "0.85"}} src="/static/images/newdeployWindow.png" alt=""/></a> */}
-              <Link href='/filter' prefetch>
+              <Link href='/filter'>
                 <a>
                   {' '}
                   <img
@@ -322,11 +325,9 @@ const Filter: FunctionComponent<Props> = ({ genres }): JSX.Element => {
               <TextField
                 id='standard-name'
                 placeholder='От'
-                value={values.years.fromYear === '0'
-                  ? 'От'
-                  : values.years.fromYear === null
-                    ? 'От'
-                    : values.years.fromYear}
+                value={
+                  values.years.fromYear === '0' ? 'От' : values.years.fromYear === null ? 'От' : values.years.fromYear
+                }
                 name='fromYear'
                 margin='dense'
                 variant='outlined'
@@ -339,11 +340,7 @@ const Filter: FunctionComponent<Props> = ({ genres }): JSX.Element => {
                 id='standard-name'
                 placeholder='До'
                 margin='dense'
-                value={values.years.toYear === '0'
-                  ? 'До'
-                  : values.years.toYear === null
-                    ? 'До'
-                    : values.years.toYear}
+                value={values.years.toYear === '0' ? 'До' : values.years.toYear === null ? 'До' : values.years.toYear}
                 name='toYear'
                 variant='outlined'
                 onChange={event => handleChange(event.target.name, event.target.value)}
@@ -355,11 +352,13 @@ const Filter: FunctionComponent<Props> = ({ genres }): JSX.Element => {
               <TextField
                 id='standard-name'
                 placeholder='От'
-                value={values.countSeries.from === '0'
-                  ? 'От'
-                  : values.countSeries.from === null
+                value={
+                  values.countSeries.from === '0'
                     ? 'От'
-                    : values.countSeries.from}
+                    : values.countSeries.from === null
+                      ? 'От'
+                      : values.countSeries.from
+                }
                 onChange={event => handleChange(event.target.name, event.target.value)}
                 margin='dense'
                 variant='outlined'
@@ -374,11 +373,9 @@ const Filter: FunctionComponent<Props> = ({ genres }): JSX.Element => {
                 margin='dense'
                 onChange={event => handleChange(event.target.name, event.target.value)}
                 variant='outlined'
-                value={values.countSeries.to === '0'
-                  ? 'До'
-                  : values.countSeries.to === null
-                    ? 'До'
-                    : values.countSeries.to}
+                value={
+                  values.countSeries.to === '0' ? 'До' : values.countSeries.to === null ? 'До' : values.countSeries.to
+                }
                 name='to'
                 style={{ width: '113%', backgroundColor: 'white', margin: '0 0 0 -13%', borderRadius: '8px' }}
               />
@@ -412,7 +409,7 @@ const Filter: FunctionComponent<Props> = ({ genres }): JSX.Element => {
                   <MenuItem value='PG-13 (от 13 лет)'>PG-13 (от 13 лет)</MenuItem>
                   <MenuItem value='R-17+ (насилие и/или нецензурная лексика)'>
                     R-17+ (насилие и/или нецензурная лексика)
-                </MenuItem>
+                  </MenuItem>
                   <MenuItem value='R+ (есть сцены легкой эротики)'>R+ (есть сцены легкой эротики)</MenuItem>
                 </Select>
               </FormControl>
@@ -459,7 +456,7 @@ const Filter: FunctionComponent<Props> = ({ genres }): JSX.Element => {
                   onClick={searchAction}
                 >
                   Искать
-              </Button>
+                </Button>
               </Grid>
               {filterParametr.filter.status || filterParametr.search.status ? (
                 <Grid item xs={3} style={{ zIndex: 10 }}>
@@ -476,8 +473,9 @@ const Filter: FunctionComponent<Props> = ({ genres }): JSX.Element => {
           </Grid>
         </div>
       </>
-    )
-  } return <div className='filterWraper'>...Loading</div>;
+    );
+  }
+  return <div className='filterWraper'>...Loading</div>;
 };
 
 export default Filter;

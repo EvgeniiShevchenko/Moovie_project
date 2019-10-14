@@ -3,6 +3,7 @@ import Link from 'next/link';
 import React, { FunctionComponent } from 'react';
 import Slider from 'react-slick';
 import root from 'window-or-global';
+import _ from 'lodash';
 
 
 // Import interfaces
@@ -24,7 +25,7 @@ const Corousel: FunctionComponent<{ data: ItemFace[] }> = ({ data }: { data: Ite
     cssEase: 'linear',
   };
 
-  const moovis_list = data.map((element: ItemFace, index?: number) => {
+  const moovis_list = _.map(data, (element: ItemFace, index?: number) => {
     return (
       <div key={index}>
         <Link href={{ pathname: '/item', query: { id: element._id, name: element.OriginalName } }}>

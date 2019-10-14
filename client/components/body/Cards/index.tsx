@@ -1,26 +1,27 @@
 import React, { ReactNode, SetStateAction, Dispatch } from 'react';
-import dynamic from "next/dynamic";
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import Router from 'next/router';
 import { usePagination } from 'react-pagination-hook';
 import Grid from '@material-ui/core/Grid';
-import root from "window-or-global";
-
+import root from 'window-or-global';
+import _ from 'lodash';
 // Import styles
 // @ts-ignore
 // dynamic(import('./cards.scss'), { ssr: false });
 import './cards.scss';
+import './preloader.scss';
 
 // Import interfaces
-import { ItemFace } from "../../../interfaces";
-import { Usecontextdata } from "../../../interfaces";
+import { ItemFace } from '../../../interfaces';
+import { Usecontextdata } from '../../../interfaces';
 
 //  Import context
 import SearchContext from '../../../useContext/searchContext';
 
 interface Props {
-  data: Array<ItemFace>,
-};
+  data: Array<ItemFace>;
+}
 
 const Cards: React.FunctionComponent<Props> = ({ data }: Props): JSX.Element => {
   // useContext
@@ -39,6 +40,7 @@ const Cards: React.FunctionComponent<Props> = ({ data }: Props): JSX.Element => 
   const [numberOfPages, setNumberOfPages] = React.useState(10);
   const [maxButtons, setMaxButtons] = React.useState(10);
   const [mausAction, setMausAction] = React.useState({ status: false, id: '' });
+  const [windowTrue, setWindowTrue] = React.useState(false);
   // Custom hook
   const { activePage, visiblePieces, goToPage } = usePagination({
     initialPage,
@@ -46,9 +48,17 @@ const Cards: React.FunctionComponent<Props> = ({ data }: Props): JSX.Element => 
     maxButtons,
   });
 
+  // Use effect
   React.useEffect(() => {
     const array = [...initialData];
     setInitialData(array.splice(0, pageSize));
+    setWindowTrue(true);
+    // window.onload = function () {
+    //   let elemnt = document.querySelector('#preloader');
+    //   elemnt.parentNode.parentNode.removeChild(elemnt.parentNode);
+    //   let element = document.querySelector('#loader');
+    //   element.parentNode.removeChild(element.parentNode);
+    // };
   }, []);
 
   React.useEffect(() => {
@@ -122,7 +132,7 @@ const Cards: React.FunctionComponent<Props> = ({ data }: Props): JSX.Element => 
         ratingArray.push(i);
       }
     }
-    const stars = ratingArray.map((map, index) => {
+    const stars = _.map(ratingArray, (rateItem, index) => {
       return (
         <span style={{ display: 'flex', flexDirection: 'row' }}>
           {rating === 0 ? (
@@ -130,10 +140,10 @@ const Cards: React.FunctionComponent<Props> = ({ data }: Props): JSX.Element => 
               <img style={{ width: '25px' }} src='/static/images/staroriginamptynew.png' alt='rating star' />
             </span>
           ) : (
-              <span style={{ display: 'flex', flexDirection: 'row' }}>
-                <img style={{ width: '25px' }} src='/static/images/starorigin.png' alt='rating star' />
-              </span>
-            )}
+            <span style={{ display: 'flex', flexDirection: 'row' }}>
+              <img style={{ width: '25px' }} src='/static/images/starorigin.png' alt='rating star' />
+            </span>
+          )}
         </span>
       );
     });
@@ -152,25 +162,22 @@ const Cards: React.FunctionComponent<Props> = ({ data }: Props): JSX.Element => 
     return stars;
   };
 
-  const cards = initialData.map((item, index) => {
+  const cards = _.map(initialData, (item, index) => {
     return (
       <Grid item xs={4} key={index}>
         <div
           style={{ height: '400px', position: 'relative' }}
-          onMouseOver={() => mouseEventTru(item._id)}
-          onFocus={() => mouseEventTru(item._id)}
-          onMouseLeave={() => mouseEventFalse(item._id)}
-          onBlur={() => mouseEventTru(item._id)}
+          onMouseOver={(): void => mouseEventTru(item._id)}
+          onFocus={(): void => mouseEventTru(item._id)}
+          onMouseLeave={(): void => mouseEventFalse(item._id)}
+          onBlur={(): void => mouseEventTru(item._id)}
           key={index}
         >
           <img style={{ width: '100%', height: '100%' }} src={item.Images} alt={item.Name} />
           <div className='cardTitleName'>
             <Link as={`/title/${item.Slug}`} href={`/item?name=${item.Slug}`}>
-              <a style={{ textDecoration: "none" }}>
-                <div
-                  style={{ cursor: 'pointer' }}
-                  className='card_title'
-                >
+              <a style={{ textDecoration: 'none' }}>
+                <div style={{ cursor: 'pointer' }} className='card_title'>
                   {item.Name}
                 </div>
               </a>
@@ -201,7 +208,7 @@ const Cards: React.FunctionComponent<Props> = ({ data }: Props): JSX.Element => 
                     <li>
                       <b>
                         Жанры:{' '}
-                        {item.Genre.map((genre: Object, index: number) => {
+                        {_.map(item.Genre, (genre: Record<string, any>) => {
                           return (
                             <a
                               style={{
@@ -230,13 +237,14 @@ const Cards: React.FunctionComponent<Props> = ({ data }: Props): JSX.Element => 
               </a>
             </Link>
           ) : (
-              <div />
-            )}
+            <div />
+          )}
         </div>
-      </Grid >
+      </Grid>
     );
   });
 
+  // root.window ? setWindowTrue(true) : setWindowTrue(false);
 
   if (root.window) {
     return (
@@ -247,7 +255,7 @@ const Cards: React.FunctionComponent<Props> = ({ data }: Props): JSX.Element => 
           </Grid>
           <div className='cardContainerWraper'>
             <div className='cardButtonWraper'>
-              {visiblePieces.map((visiblePiece, index) => {
+              {_.map(visiblePieces, (visiblePiece, index) => {
                 const key = `${visiblePiece.type}-${index}`;
 
                 if (visiblePiece.type === 'ellipsis') {
@@ -262,10 +270,11 @@ const Cards: React.FunctionComponent<Props> = ({ data }: Props): JSX.Element => 
                   // console.log(index, pageNumber, visiblePiece.type);
                   return (
                     <button
+                      type='button'
                       style={{ ...classButton }}
                       className='cardPaginationButton'
                       key={key}
-                      onClick={() => {
+                      onClick={(): void => {
                         onClick(pageNumber);
                       }}
                     >
@@ -293,8 +302,10 @@ const Cards: React.FunctionComponent<Props> = ({ data }: Props): JSX.Element => 
           </div>
         </div>
       </>
-    )
-  } return <div className='cardCardsWraper'>...Loading</div>;
+    );
+    // } return <div id='preloader' className='cardCardsWraper'><div id='loader'></div></div>;
+  }
+  return <div className='cardCardsWraper' />;
 };
 
 export default Cards;

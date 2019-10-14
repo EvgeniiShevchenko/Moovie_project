@@ -3,12 +3,9 @@ import Link from 'next/link';
 import _ from 'lodash';
 import InfiniteScrollComponent from 'react-infinite-scroll-component';
 // @ts-ignore
-import Grider from "react-grider";
+import Grider from 'react-grider';
 import axios from 'axios';
 import root from 'window-or-global';
-
-// Import interfaces
-import { GenreFace, ItemFace } from "../../../../interfaces";
 
 // Import styles
 import './filter.scss';
@@ -44,74 +41,77 @@ import Select from '@material-ui/core/Select';
 import OutlinedInput from '@material-ui/core/OutlinedInput';
 import MenuItem from '@material-ui/core/MenuItem';
 import TextField from '@material-ui/core/TextField';
+
+import Scroll, { ScrollbarProps } from 'react-smooth-scrollbar';
 import SearchContext from '../../../../useContext/searchContext';
 // import {ScrollbarProps} from "@types/react-smooth-scrollbar";
-import Scroll, { ScrollbarProps } from "react-smooth-scrollbar";
+import { GenreFace, ItemFace } from '../../../../interfaces';
 
-// const Scroll, {propTypes} = dynamic(import('react-smooth-scrollbar'), { ssr: false });
 const Scrollbar: React.ComponentType<ScrollbarProps> = Scroll;
 
-const useStyles = makeStyles((theme: Theme) => createStyles({
-  root: {
-    width: '100%',
-    backgroundColor: 'rgba(192,62,44,0)',
-    //   overflowX: 'auto',
-    //   overflowY: 'auto',
-  },
-  roottwo: {
-    width: '100%',
-    maxWidth: 360,
-    backgroundColor: theme.palette.background.paper,
-    position: 'relative',
-    overflow: 'auto',
-    maxHeight: 540,
-  },
-  dropdownStyle: {
-    border: '1px solid black',
-    borderRadius: '5%',
-    backgroundColor: 'rgba(223,158,149,1)',
-    maxHeight: '300px',
-  },
-  table: {
-    minWidth: 650,
-  },
-  heading: {
-    fontSize: theme.typography.pxToRem(15),
-    fontWeight: theme.typography.fontWeightRegular,
-  },
-  listSection: {
-    backgroundColor: 'inherit',
-  },
-  ul: {
-    backgroundColor: 'inherit',
-    padding: 0,
-  },
-  tableWrapper: {
-    maxHeight: 407,
-    overflow: 'auto',
-  },
-}));
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    root: {
+      width: '100%',
+      backgroundColor: 'rgba(192,62,44,0)',
+      //   overflowX: 'auto',
+      //   overflowY: 'auto',
+    },
+    roottwo: {
+      width: '100%',
+      maxWidth: 360,
+      backgroundColor: theme.palette.background.paper,
+      position: 'relative',
+      overflow: 'auto',
+      maxHeight: 540,
+    },
+    dropdownStyle: {
+      border: '1px solid black',
+      borderRadius: '5%',
+      backgroundColor: 'rgba(223,158,149,1)',
+      maxHeight: '300px',
+    },
+    table: {
+      minWidth: 650,
+    },
+    heading: {
+      fontSize: theme.typography.pxToRem(15),
+      fontWeight: theme.typography.fontWeightRegular,
+    },
+    listSection: {
+      backgroundColor: 'inherit',
+    },
+    ul: {
+      backgroundColor: 'inherit',
+      padding: 0,
+    },
+    tableWrapper: {
+      maxHeight: 407,
+      overflow: 'auto',
+    },
+  })
+);
 
 const columns = [
   {
     id: 'name',
     label: '№',
     minWidth: 10,
-    align: "center" as const,
+    align: 'center' as const,
     pading: '14px 0px 14px 10px',
   },
   {
     id: 'code',
     label: 'Имя',
     minWidth: 50,
-    align: "left" as const,
+    align: 'left' as const,
     pading: '14px 0px 14px 10px',
   },
   {
     id: 'population',
     label: 'Тип',
     minWidth: 50,
-    align: "center" as const,
+    align: 'center' as const,
     pading: '14px 0px 14px 10px',
     //   format: (value) => value.toLocaleString(),
   },
@@ -119,7 +119,7 @@ const columns = [
     id: 'size',
     label: 'Год',
     minWidth: 50,
-    align: "center" as const,
+    align: 'center' as const,
     pading: '14px 0px 14px 10px',
     //   format: (value) => value.toLocaleString(),
   },
@@ -127,7 +127,7 @@ const columns = [
     id: 'density',
     label: 'Рейтинг',
     minWidth: 50,
-    align: "center" as const,
+    align: 'center' as const,
     pading: '14px 0px 14px 10px',
     //   format: (value) => value.toFixed(2),
   },
@@ -157,12 +157,11 @@ const exampleText = `
 `;
 
 interface Props {
-  data: ItemFace[],
-  genres: GenreFace[],
-};
+  data: ItemFace[];
+  genres: GenreFace[];
+}
 
 const FilterPage: FunctionComponent<Props> = ({ data, genres }) => {
-  console.log(data, genres);
   // useContext
   const {
     filterParametr,
@@ -176,6 +175,7 @@ const FilterPage: FunctionComponent<Props> = ({ data, genres }) => {
     values,
     setValues,
   } = React.useContext(SearchContext);
+
   // useStates
   const [initialData, setInitialData] = React.useState(data);
   console.log(initialData);
@@ -262,16 +262,10 @@ const FilterPage: FunctionComponent<Props> = ({ data, genres }) => {
   const classes = useStyles({});
 
   const selectButtonGenre = (id: any, name: string, info: string) => {
-    const sameid = selectButton.find(haveid => {
-      return haveid.id === id;
-    });
+    const sameid = _.find(selectButton, ['id', id]);
+    console.log(id, selectButton, sameid);
 
-    if (sameid) {
-      const filter = selectButton.filter(sameid => sameid.id !== id);
-
-      setSelectButton(filter);
-      setDescription({ ...defaultDescription, description: exampleText });
-    } else {
+    if (sameid === undefined) {
       setSelectButton([
         ...selectButton,
         {
@@ -280,10 +274,15 @@ const FilterPage: FunctionComponent<Props> = ({ data, genres }) => {
         },
       ]);
       setDescription({ ...defaultDescription, description: info });
+    } else {
+      const filter = _.filter(selectButton, ['id', !id]);
+
+      setSelectButton(filter);
+      setDescription({ ...defaultDescription, description: exampleText });
     }
   };
 
-  const handleChange = (name: string | undefined, value: unknown) => {
+  const handleChange = (name: string | undefined, value: unknown): void => {
     setValues({ ...values, [name]: value });
     if (name === 'from' || name === 'to') {
       setValues({ ...values, countSeries: { ...values.countSeries, [name]: value } });
@@ -292,7 +291,6 @@ const FilterPage: FunctionComponent<Props> = ({ data, genres }) => {
       setValues({ ...values, years: { ...values.years, [name]: value } });
     }
   };
-
 
   const handleLoadMore = async (page: number): Promise<void> => {
     // console.log("current page", page);
@@ -314,9 +312,9 @@ const FilterPage: FunctionComponent<Props> = ({ data, genres }) => {
     setScrollPage(1);
     const genre =
       selectButton.length !== 0
-        ? selectButton.map(genre => {
-          return genre.name.trim();
-        })
+        ? _.map(selectButton, genre => {
+            return _.trim(genre.name);
+          })
         : [''];
     const filterPervState = {
       status: false,
@@ -349,15 +347,32 @@ const FilterPage: FunctionComponent<Props> = ({ data, genres }) => {
         TypeOf: values.type,
         Status: values.status,
         Year: {
-          from: values.years.fromYear === 'От' ? 0 : typeof values.years.fromYear === 'string' ? parseInt(values.years.fromYear, 10) : values.years.fromYear,
-          to: values.years.toYear === 'До' ? 0 : typeof values.years.toYear === 'string' ? parseInt(values.years.toYear, 10) : values.years.toYear,
+          from:
+            values.years.fromYear === 'От'
+              ? 0
+              : _.isString(values.years.fromYear)
+              ? parseInt(values.years.fromYear, 10)
+              : values.years.fromYear,
+          to:
+            values.years.toYear === 'До'
+              ? 0
+              : _.isString(values.years.toYear)
+              ? parseInt(values.years.toYear, 10)
+              : values.years.toYear,
         },
         NumOfSeries: {
-          from: values.countSeries.from === 'От' ? 0 : typeof values.countSeries.from === 'string'
-            ? parseInt(values.countSeries.from, 10)
-            : values.countSeries.from,
+          from:
+            values.countSeries.from === 'От'
+              ? 0
+              : _.isString(values.countSeries.from)
+              ? parseInt(values.countSeries.from, 10)
+              : values.countSeries.from,
           to:
-            values.countSeries.to === 'До' ? 0 : typeof values.countSeries.to === 'string' ? parseInt(values.countSeries.to, 10) : values.countSeries.to,
+            values.countSeries.to === 'До'
+              ? 0
+              : _.isString(values.countSeries.to)
+              ? parseInt(values.countSeries.to, 10)
+              : values.countSeries.to,
         },
         AgeRating: values.age,
       },
@@ -367,28 +382,19 @@ const FilterPage: FunctionComponent<Props> = ({ data, genres }) => {
         param: 1,
       },
     };
-    if (
-      JSON.stringify(searchSetings.filter) === JSON.stringify(filterPervState) &&
-      JSON.stringify(searchSetings.search) === JSON.stringify(searchPervState)
-    ) {
+    if (_.isEqual(searchSetings.filter, filterPervState) && _.isEqual(searchSetings.search, searchPervState)) {
       setFilterParameter({
         ...searchSetings,
         filter: { ...searchSetings.filter, status: false },
         search: { ...searchSetings.search, status: false },
       });
-    } else if (
-      JSON.stringify(searchSetings.filter) === JSON.stringify(filterPervState) &&
-      JSON.stringify(searchSetings.search) !== JSON.stringify(searchPervState)
-    ) {
+    } else if (_.isEqual(searchSetings.filter, filterPervState) && !_.isEqual(searchSetings.search, searchPervState)) {
       setFilterParameter({
         ...searchSetings,
         filter: { ...searchSetings.filter, status: false },
         search: { ...searchSetings.search, status: true },
       });
-    } else if (
-      JSON.stringify(searchSetings.filter) !== JSON.stringify(filterPervState) &&
-      JSON.stringify(searchSetings.search) === JSON.stringify(searchPervState)
-    ) {
+    } else if (!_.isEqual(searchSetings.filter, filterPervState) && _.isEqual(searchSetings.search, searchPervState)) {
       setFilterParameter({
         ...searchSetings,
         filter: { ...searchSetings.filter, status: true },
@@ -425,16 +431,16 @@ const FilterPage: FunctionComponent<Props> = ({ data, genres }) => {
 
   const renderYears =
     yearsList.length !== 0 ? (
-      yearsList.map((year, index) => (
+      _.map(yearsList, (year, index) => (
         <MenuItem key={index} value={year}>
           {year}
         </MenuItem>
       ))
     ) : (
-        <MenuItem value=''>
-          <em>None</em>
-        </MenuItem>
-      );
+      <MenuItem value=''>
+        <em>None</em>
+      </MenuItem>
+    );
 
   if (root.window) {
     return (
@@ -466,7 +472,7 @@ const FilterPage: FunctionComponent<Props> = ({ data, genres }) => {
             >
               <div>
                 <List style={{ backgroundColor: 'rgba(223, 158, 149, 1)' }} subheader={<li />}>
-                  {genres.map((genre, index) => {
+                  {_.map(genres, (genre, index) => {
                     return (
                       <ListItem
                         divider
@@ -476,19 +482,19 @@ const FilterPage: FunctionComponent<Props> = ({ data, genres }) => {
                       >
                         <ListItemText primary={genre.Name} />
                         <div>
-                          {selectButton.find(sameid => sameid.id === genre._id) ? (
+                          {!_.isEmpty(_.find(selectButton, ['id', genre._id])) ? (
                             <img
                               style={{ width: '25px' }}
                               src='/static/images/genreactivebutton.png'
                               alt='Genre button active'
                             />
                           ) : (
-                              <img
-                                style={{ width: '25px' }}
-                                src='/static/images/genredefaultbutton.png'
-                                alt='Genre button default'
-                              />
-                            )}
+                            <img
+                              style={{ width: '25px' }}
+                              src='/static/images/genredefaultbutton.png'
+                              alt='Genre button default'
+                            />
+                          )}
                         </div>
                       </ListItem>
                     );
@@ -529,9 +535,7 @@ const FilterPage: FunctionComponent<Props> = ({ data, genres }) => {
                               src='/static/images/filterbuttonzoom.png'
                               alt='Zoom-buttom'
                             />
-                            <Link
-                              as={`/title/${description.slug}`} href={`/item?name=${description.slug}`}
-                            >
+                            <Link as={`/title/${description.slug}`} href={`/item?name=${description.slug}`}>
                               <a>
                                 <img className='itemImages' src={description.images} alt={description.name} />
                               </a>
@@ -543,19 +547,19 @@ const FilterPage: FunctionComponent<Props> = ({ data, genres }) => {
                                 color: 'rgba(255, 255, 255, 0.7)',
                                 padding: '0 0 10px 5px',
                                 margin: 'auto',
-                                listStyleType: 'none'
+                                listStyleType: 'none',
                               }}
                             >
                               <li>Выпуск: {description.year}</li>
                               <li>Производство: {description.country}</li>
                               <li>
                                 Жанр:{' '}
-                                {description.genre.map((genreItem, index) => {
+                                {_.map(description.genre, (genreItem, index) => {
                                   return (
                                     <button
                                       type='button'
                                       key={index}
-                                      id={index + ''}
+                                      id={`${index}`}
                                       style={{
                                         background: '#C03E2C',
                                         margin: '0 3px 0 0',
@@ -585,17 +589,17 @@ const FilterPage: FunctionComponent<Props> = ({ data, genres }) => {
                         </div>
                       </div>
                     ) : (
-                        <p style={{ textAlign: 'justify', color: 'rgba(255, 255, 255, 0.7)' }}>
-                          <input
-                            onClick={() => setButtomClickHeandler(!buttomZoomClickHeandler)}
-                            type='image'
-                            style={{ width: '36px', float: 'right', marginLeft: '5px' }}
-                            src='/static/images/filterbuttonzoom.png'
-                            alt='Zoom-buttom'
-                          />
-                          {description.description}
-                        </p>
-                      )}
+                      <p style={{ textAlign: 'justify', color: 'rgba(255, 255, 255, 0.7)' }}>
+                        <input
+                          onClick={() => setButtomClickHeandler(!buttomZoomClickHeandler)}
+                          type='image'
+                          style={{ width: '36px', float: 'right', marginLeft: '5px' }}
+                          src='/static/images/filterbuttonzoom.png'
+                          alt='Zoom-buttom'
+                        />
+                        {description.description}
+                      </p>
+                    )}
                   </div>
                 </div>
               </Scrollbar>
@@ -614,11 +618,11 @@ const FilterPage: FunctionComponent<Props> = ({ data, genres }) => {
                 style={
                   buttomZoomClickHeandler
                     ? {
-                      height: '307px',
-                      minWidth: '300px',
-                      overflow: 'auto',
-                      borderRadius: '0 0 0 25px',
-                    }
+                        height: '307px',
+                        minWidth: '300px',
+                        overflow: 'auto',
+                        borderRadius: '0 0 0 25px',
+                      }
                     : { height: '307px', minWidth: '500px', overflow: 'auto' }
                 }
               >
@@ -634,7 +638,7 @@ const FilterPage: FunctionComponent<Props> = ({ data, genres }) => {
                   >
                     <TableHead style={{ backgroundColor: 'rgba(192, 62, 44, 1)' }}>
                       <TableRow>
-                        {columns.map(column => (
+                        {_.map(columns, column => (
                           <TableCell
                             size='small'
                             padding='checkbox'
@@ -648,7 +652,7 @@ const FilterPage: FunctionComponent<Props> = ({ data, genres }) => {
                       </TableRow>
                     </TableHead>
                     <TableBody style={{ backgroundColor: 'rgba(130, 79, 79, 1)' }}>
-                      {initialData.map((item, index) => (
+                      {_.map(initialData, (item, index) => (
                         <TableRow
                           onClick={() => tableButtonHeandler(item)}
                           hover
@@ -832,8 +836,8 @@ const FilterPage: FunctionComponent<Props> = ({ data, genres }) => {
                                   {values.years.fromYear === '0'
                                     ? 'От'
                                     : values.years.fromYear === null
-                                      ? 'От'
-                                      : values.years.fromYear}
+                                    ? 'От'
+                                    : values.years.fromYear}
                                 </InputLabel>
                               </div>
                               <Select
@@ -877,8 +881,8 @@ const FilterPage: FunctionComponent<Props> = ({ data, genres }) => {
                                   {values.years.toYear === '0'
                                     ? 'До'
                                     : values.years.toYear === null
-                                      ? 'До'
-                                      : values.years.toYear}
+                                    ? 'До'
+                                    : values.years.toYear}
                                 </InputLabel>
                               </div>
                               <Select
@@ -921,11 +925,13 @@ const FilterPage: FunctionComponent<Props> = ({ data, genres }) => {
                               className='focus'
                               id='standard-name'
                               placeholder='От'
-                              value={values.countSeries.from === '0'
-                                ? 'От'
-                                : values.countSeries.from === null
+                              value={
+                                values.countSeries.from === '0'
                                   ? 'От'
-                                  : values.countSeries.from}
+                                  : values.countSeries.from === null
+                                  ? 'От'
+                                  : values.countSeries.from
+                              }
                               onChange={event => handleChange(event.target.name, event.target.value)}
                               margin='dense'
                               variant='outlined'
@@ -943,11 +949,13 @@ const FilterPage: FunctionComponent<Props> = ({ data, genres }) => {
                               margin='dense'
                               onChange={event => handleChange(event.target.name, event.target.value)}
                               variant='outlined'
-                              value={values.countSeries.to === '0'
-                                ? 'До'
-                                : values.countSeries.to === null
+                              value={
+                                values.countSeries.to === '0'
                                   ? 'До'
-                                  : values.countSeries.to}
+                                  : values.countSeries.to === null
+                                  ? 'До'
+                                  : values.countSeries.to
+                              }
                               name='to'
                               style={{
                                 width: '100%',

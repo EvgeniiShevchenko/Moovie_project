@@ -14,11 +14,21 @@
         {
             "language": "typescript",
             "autoFix": true
+        },
+        {
+            "language": "typescriptreact",
+            "autoFix": true
         }
     ],
     // "eslint.lintTask.enable": true,
     "editor.formatOnSave": true,
     "[javascript]": {
+        "editor.formatOnSave": false
+    },
+    "[typescript]": {
+        "editor.formatOnSave": false
+    },
+    "[typescriptreact]": {
         "editor.formatOnSave": false
     },
     "eslint.autoFixOnSave": true,

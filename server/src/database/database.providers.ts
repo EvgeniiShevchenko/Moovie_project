@@ -1,10 +1,11 @@
 import * as mongoose from 'mongoose';
+import * as config from '../config';
 
 export const databaseProviders = [
   {
     provide: 'DATABASE_CONNECTION',
     useFactory: async (): Promise<typeof mongoose> =>
-      await mongoose.connect('mongodb+srv://admin:1234@myproject-a0qrm.mongodb.net/test?retryWrites=true&w=majority', {
+      await mongoose.connect(config.connectionUrlMongose, {
         useNewUrlParser: true,
       }),
   },

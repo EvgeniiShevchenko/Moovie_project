@@ -1,26 +1,26 @@
 import React, { useState, FunctionComponent } from 'react';
-import styled from 'styled-components';
 import Grid from '@material-ui/core/Grid';
 import root from 'window-or-global';
 
+// Import styles
+import './items.scss';
 
 // Import interfaces
-import { ItemFace } from "../../../interfaces";
+import { ItemFace } from '../../../interfaces';
 
 interface Props {
   data: ItemFace[];
-};
+}
 
 const Item: FunctionComponent<Props> = ({ data }): JSX.Element => {
-
   if (root.window) {
     return (
       <>
-        <CardWraper>
+        <div className='itemCardWraper'>
           <Grid container spacing={0}>
             <Grid item xs={9}>
               <article style={{ backgroundColor: '#DCB926' }}>
-                <ImageWraper>
+                <div className='itemImageWraper'>
                   <span>
                     <input
                       style={{ maxHeight: '380px', maxWidth: '100%' }}
@@ -29,11 +29,11 @@ const Item: FunctionComponent<Props> = ({ data }): JSX.Element => {
                       alt={data[0].OriginalName}
                     />
                   </span>
-                </ImageWraper>
-                <ContentWraper>
-                  <TitleWraper>
+                </div>
+                <div className='itemContentWraper'>
+                  <h1 className='itemTitleWraper'>
                     {data[0].Name}/{data[0].OriginalName}
-                  </TitleWraper>
+                  </h1>
                   <ul style={{ listStyleType: 'none' }}>
                     <li>Выпуск: {data[0].Year}</li>
                     <li>Производство: {data[0].Country}</li>
@@ -49,7 +49,7 @@ const Item: FunctionComponent<Props> = ({ data }): JSX.Element => {
                     style={{ margin: '0  13px 0 13px' }}
                     dangerouslySetInnerHTML={{ __html: `Описание: ${data[0].Description}` }}
                   />
-                </ContentWraper>
+                </div>
                 <br />
                 <div>
                   <img style={{ width: '100%' }} src='/static/images/Player.png' alt='Player-tamplates' />
@@ -69,30 +69,11 @@ const Item: FunctionComponent<Props> = ({ data }): JSX.Element => {
               <div style={{ height: '100%', width: '100%' }} />
             </Grid>
           </Grid>
-        </CardWraper>
+        </div>
       </>
     );
   }
-  return <div>Loading...</div>;
+  return <div className='itemCardWraper'>Loading...</div>;
 };
-
-const CardWraper = styled.div`
-  // background-color: #DCB926;
-  margin: 0 23px 0px 23px;
-`;
-
-const ImageWraper = styled.div`
-  float: left;
-  margin: 10px 10px 0 10px;
-`;
-const ContentWraper = styled.div`
-  font-size: 18px;
-  text-align: justify;
-`;
-const TitleWraper = styled.h1`
-  display: flex;
-  justify-content: center;
-  padding-top: 5px;
-`;
 
 export default Item;

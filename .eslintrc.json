@@ -4,8 +4,9 @@
         "node": true,
         "es6": true
     },
-    "extends": ["airbnb", "prettier", "prettier/react"],
-    "parser": "babel-eslint",
+    "extends": ["airbnb", "prettier", "prettier/react", "plugin:lodash/recommended", "plugin:@typescript-eslint/recommended", "plugin:css-modules/recommended"],
+    // "parser": "babel-eslint",
+    "parser": "@typescript-eslint/parser",
     "globals": {
         "Atomics": "readonly",
         "SharedArrayBuffer": "readonly"
@@ -19,7 +20,13 @@
     },
     "rules": {
         "react/jsx-filename-extension": [1, {
-            "extensions": [".js", ".jsx"]
+            "extensions": [".jsx", ".tsx"]
+        }],
+        "css-modules/no-unused-class": [2, {
+            "camelCase": true
+        }],
+        "css-modules/no-undef-class": [2, {
+            "camelCase": true
         }],
         "no-console": "warn",
         "no-debugger": "warn",
@@ -32,7 +39,13 @@
         "linebreak-style": "off",
         "react/no-array-index-key": "off",
         "no-underscore-dangle": "off",
+        "react/prop-types": "off",
         "no-nested-ternary": "warn",
+        "no-plusplus": ["error",
+            {
+                "allowForLoopAfterthoughts": true
+            }
+        ],
         "prefer-const": [
             "error",
             {
@@ -51,5 +64,5 @@
             }
         ]
     },
-    "plugins": ["react", "prettier", "html"]
+    "plugins": ["react", "prettier", "html", "lodash", "@typescript-eslint", "css-modules"]
 }

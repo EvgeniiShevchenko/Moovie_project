@@ -1,14 +1,15 @@
-import * as React from "react";
+import React from "react";
 import SearchContext from "../../../useContext/searchContext";
 import styled, { ThemeProvider } from 'styled-components';
+import root from 'window-or-global';
 
 export interface HeadProps {
     size?: boolean
 };
 
 const Head: React.FunctionComponent<HeadProps> = (props): JSX.Element => {
+
     // useContext
-    // @ts-ignore
     const { filterParametr, setFilterParameter, searchValue, setSearchValue, curentPage, setCurentPage, filterResetButtonHeandler, setFilterResetButtonHeandler } = React.useContext(SearchContext);
 
     const searchButtonHeandler = () => {
@@ -16,40 +17,42 @@ const Head: React.FunctionComponent<HeadProps> = (props): JSX.Element => {
         setFilterParameter({ ...filterParametr, itemName: searchValue })
     }
 
-    return (
-        <>
-            <div style={{ display: "flex", justifyContent: "center" }}>
-                <img style={props.size ? { width: "1155px" } : {}} src="/static/images/header1.png" alt="header" />
-                <King>
-                    <input type="image" src="/static/images/king1.png" />
-                </King>
-                <Saitama>
-                    <input type="image" src="/static/images/sitama.png" />
-                </Saitama>
-                <Search_string_input>
-                    <input onClick={searchButtonHeandler} type="image" src="/static/images/search_fild_input4.png" />
-                    <Search_input_position>
-                        <Search_input_wraper value={searchValue} onChange={(event) => setSearchValue(event.target.value)} type="text" />
-                    </Search_input_position>
-                </Search_string_input>
-                <Direction_buttom>
-                    <input style={{ marginBottom: "-26px", zIndex: 3 }} type="image" src="/static/images/films_button.png" />
-                    <input style={{ marginBottom: "-26px", zIndex: 2 }} type="image" src="/static/images/serials_button.png" />
-                    <input type="image" src="/static/images/anime_button.png" />
-                </Direction_buttom>
-                <Login_buttom>
-                    <input type="image" src="/static/images/login_button.png" />
-                </Login_buttom>
-                <Login_group>
-                    <img className="example" src="/static/images/email_input.png" alt="email_input" />
-                    <img src="/static/images/password_input.png" alt="password_input" />
-                    <Login_buttom_submit>
-                        <input type="image" src="/static/images/submit_button.png" />
-                    </Login_buttom_submit>
-                </Login_group>
-            </div>
-        </>
-    )
+    if (root.window) {
+        return (
+            <>
+                <div style={{ display: "flex", justifyContent: "center" }}>
+                    <img style={props.size ? { width: "1155px" } : {}} src="/static/images/header1.png" alt="header" />
+                    <King>
+                        <input type="image" src="/static/images/king1.png" />
+                    </King>
+                    <Saitama>
+                        <input type="image" src="/static/images/sitama.png" />
+                    </Saitama>
+                    <Search_string_input>
+                        <input onClick={searchButtonHeandler} type="image" src="/static/images/search_fild_input4.png" />
+                        <Search_input_position>
+                            <Search_input_wraper value={searchValue} onChange={(event) => setSearchValue(event.target.value)} type="text" />
+                        </Search_input_position>
+                    </Search_string_input>
+                    <Direction_buttom>
+                        <input style={{ marginBottom: "-26px", zIndex: 3 }} type="image" src="/static/images/films_button.png" />
+                        <input style={{ marginBottom: "-26px", zIndex: 2 }} type="image" src="/static/images/serials_button.png" />
+                        <input type="image" src="/static/images/anime_button.png" />
+                    </Direction_buttom>
+                    <Login_buttom>
+                        <input type="image" src="/static/images/login_button.png" />
+                    </Login_buttom>
+                    <Login_group>
+                        <img className="example" src="/static/images/email_input.png" alt="email_input" />
+                        <img src="/static/images/password_input.png" alt="password_input" />
+                        <Login_buttom_submit>
+                            <input type="image" src="/static/images/submit_button.png" />
+                        </Login_buttom_submit>
+                    </Login_group>
+                </div>
+            </>
+        )
+    } return <div style={{ display: "flex", justifyContent: "center" }}>...Loading</div>
 };
 
 export default Head;
