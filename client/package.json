@@ -62,7 +62,7 @@
     "unfetch": "^4.1.0",
     "url": "^0.11.0",
     "window-or-global": "^1.0.1",
-    "yarn": "^1.17.3"
+    "yarn": "^1.22.0"
   },
   "devDependencies": {
     "@types/node": "^12.7.2",
