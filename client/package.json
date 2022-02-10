@@ -43,7 +43,7 @@
     "next": "^9.0.5",
     "next-compose-plugins": "^2.2.0",
     "next-routes": "^1.4.2",
-    "node-sass": "^4.12.0",
+    "node-sass": "^7.0.0",
     "rc-time-picker": "^3.7.2",
     "react": "^16.9.0",
     "react-dom": "^16.9.0",
